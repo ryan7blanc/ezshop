@@ -6,3 +6,7 @@ Louis Blanc @ryan7blanc lobl1307@colorado.edu
 Benji Burkhalter-Castro @bebu8967 bebu8967@colorado.edu
 Nathan Reed @nathan732 nare5076@colorado.edu
 Robiel Kennedy
+
+
+Application Description:
+Includes simple functionalities such as the use of shopping carts and the addition of products through APIs. The user will be able to browse products and also be able to check any descriptions or images that are added to the post. 
