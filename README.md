@@ -19,3 +19,6 @@ Includes simple functionalities such as the use of shopping carts and the additi
 
 Vision Statement:
 For busy people who want to make shopping easier. EZ Shop is an online marketplace that allows users to browse and purchase products to be shipped directly to their homes. Unlike other companies like Amazon or E-Bay, EZ Shop offers a clear unobstructed shopping experience in the comfort of your own home.  
+
+Communication Plan:
+We will be using discord for communication and meetings.
