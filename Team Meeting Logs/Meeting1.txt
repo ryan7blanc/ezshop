@@ -1,0 +1,6 @@
+Nathan: Making website with scripting
+Anna: Create login page
+Ryan: Create product class
+Benji: Checkout page
+
+Will be working on each for this week.
