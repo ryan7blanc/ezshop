@@ -21,7 +21,7 @@ void cart::removecart(product item){
 
     for(int i = 0; i < items.size(); i++)
     {
-        if (item == items.at(i))
+        if (item.getid() == items.at(i).getid())
         {
             items.erase(items.begin() + i);
         }

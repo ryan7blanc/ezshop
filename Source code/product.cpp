@@ -8,13 +8,15 @@ product::product(){
     description = "";
     price = 0;
     review = 0;
+    id = 0;
 }
 
-product::product(string name, string description, int price, int review){
+product::product(string name, string description, int price, int review, int id){
     this->name = name;
     this->description = description;
     this->price = price;
     this->review = review;
+    this->id - id;
 }
 
 string product::getname(){
@@ -31,6 +33,10 @@ int product::getprice(){
 
 int product::getreview(){
    return this->review; 
+}
+
+int product::getid(){
+   return this->id;
 }
 
 void product::setname(string name){
