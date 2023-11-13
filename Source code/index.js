@@ -10,6 +10,8 @@ const session = require('express-session'); // To set the session object. To sto
 const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part B.
 
+//fixes css!! 
+app.use(express.static(__dirname + '/resources/css'));
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
 // *****************************************************
@@ -42,6 +44,7 @@ db.connect()
 app.set('view engine', 'ejs'); // set the view engine to EJS
 app.use(bodyParser.json()); // specify the usage of JSON for parsing request body.
 
+
 // initialize session variables
 app.use(
   session({
@@ -56,6 +59,11 @@ app.use(
     extended: true,
   })
 );
+
+
+
+
+
 
 ////////////////////////////
 app.get('/welcome', (req, res) => {
@@ -83,7 +91,10 @@ app.get('/welcome', (req, res) => {
           //save user details in session like in lab 8
           req.session.user = data.user;
           req.session.save();
-          res.redirect("/discover");
+          //res.json({message: 'Success'});
+         
+          res.redirect("/");
+         
         }
         else
         {
@@ -91,11 +102,53 @@ app.get('/welcome', (req, res) => {
         }
       }
     } catch (error) {
+      //res.json({message: 'Invalid input'});
+      //console.log("okay????")
       res.redirect('/login');
       return console.log("catch error");
     }
       
   });
 ////////////////////////
+
+app.get('/', (req,res) => {
+  res.render('pages/home.ejs');
+});
+
+app.get('/register', (req, res) => {
+  if(req.query.error){
+  res.render("pages/register.ejs",{
+  message: 'Your username or password could not be found. Please register for a new account.',
+  error: true, 
+  });
+  } else 
+  {
+    res.render("pages/register.ejs");
+  }
+});
+
+app.post('/register', async (req, res) => {
+  var salt = bcrypt.genSaltSync(10);
+  //console.log('1');
+  var hash = await bcrypt.hashSync(req.body.password, salt);
+  const username = req.body.username;
+  //const password = req.body.password;
+  const query = `INSERT INTO users (username, password) VALUES ('${username}', '${hash}') returning *;`; 
+
+  db.any(query)
+        .then(data => {
+            console.log('DATA:', data);
+            //res.json({message: 'Success'});
+            res.redirect('/login');
+            
+
+        })
+        .catch(err => {
+            // throw error
+  
+            res.redirect('/register');
+            return console.log(err);
+        });
+});
 
   module.exports = app.listen(3000);
