@@ -1,0 +1,11 @@
+How 3 Features will be tested:
+
+Login
+Provided username and password are found in the DB, the user may login. 
+If username or password are incorrect, user is alerted with an error message and what action they can take.
+
+Register 
+
+Adding product to cart
+
+Checking out
