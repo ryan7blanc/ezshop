@@ -20,24 +20,67 @@ describe('Server!', () => {
         expect(res).to.have.status(200);
         expect(res.body.status).to.equals('success');
         assert.strictEqual(res.body.message, 'Welcome!');
+        console.log('welcome..')
         done();
       });
   });
 
   // ===========================================================================
   // TO-DO: Part A Login unit test case
-
-  //We are checking POST /add_user API by passing the user info in the correct order. This test case should pass and return a status 200 along with a "Success" message.
-//Positive cases
-it('positive : /login', done => {
+ /* it('Postive: /register', done => {
     chai
       .request(server)
-      .post('/login')
-      .send({id: 5, username: 'JohnDoe', password: 'password'})
+      .post('/register')
+      .send({username: 'User', password:'password6'})
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body.message).to.equals('Success');
         done();
       });
+  });*/
+
+  it('positive : /register', done => {
+    chai
+      .request(server)
+      .post('/register')
+      .send({id: 1, username: 'User', password: 'password6'})
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        console.log(res.body.message); 
+        expect(res.body.message).to.equals('Success');
+        done();
+      });
   });
+
+
+
+  //We are checking POST /add_user API by passing the user info in the correct order. This test case should pass and return a status 200 along with a "Success" message.
+//Positive cases  
+  it('positive : /login', done => {
+    chai
+      .request(server)
+      .post('/login')
+      .send({id: 2, username: 'User', password: 'password6'})
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        console.log(res.body.message); 
+        expect(res.body.message).to.equals('Success');
+        done();
+      });
+  });
+
+  it('Negative : /login Checking invalid name', done => {
+    chai
+      .request(server)
+      .post('/login')
+      .send({id: '5', name: 10, password:'password'})
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        console.log(res.body.message);
+        expect(res.body.message).to.equals('Invalid input');
+        done();
+      });
+  });
+
 });
+
