@@ -134,6 +134,53 @@ header {
   white-space: nowrap;
 }
 
+
+/* Home/Shop Section */
+.shop-section {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  background-color: #f3f3f3;
+  padding: 50px 0;
+  flex-wrap: wrap;
+}
+.shop-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  max-width: 1280px;
+  width: 100%;
+}
+.shop-link {
+  background-color: #fff;
+  padding: 30px;
+  display: flex;
+  cursor: pointer;
+  flex-direction: column;
+  white-space: nowrap;
+}
+.shop-link img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+.shop-link h3 {
+  margin-bottom: 10px;
+}
+.shop-link a {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: rgb(0, 247, 255);
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+.shop-link:hover a {
+  color: #1fbfc7;
+  text-decoration: underline;
+}
+
 /* Footer */
 .footer-title {
     display: flex;
