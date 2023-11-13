@@ -12,6 +12,8 @@ const axios = require('axios'); // To make HTTP requests from our server. We'll 
 
 //fixes css!! 
 app.use(express.static(__dirname + '/resources/css'));
+//fixes images 
+app.use(express.static(__dirname + '/resources/img'));
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
 // *****************************************************
