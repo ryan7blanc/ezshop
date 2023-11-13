@@ -99,8 +99,11 @@ app.get('/welcome', (req, res) => {
          
         }
         else
-        {
-          res.render("pages/login.ejs");
+        {  //alerts user that they entered the wrong password or username
+           res.render("pages/login.ejs",{
+            message: 'Incorrect username or password.',
+            error: true, 
+          });
         }
       }
     } catch (error) {
