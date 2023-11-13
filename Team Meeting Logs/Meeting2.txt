@@ -1,0 +1,6 @@
+Anna: Working on testing for lab 11.
+Ryan: Begin database to connect back to front-end.
+Nathan: Will be adding more to home page.
+Benji: Work on credit card/payment for checkout, APIs if possible
+
+We will all be contributing to working on the database. Add a cart attribute to each user data. 
