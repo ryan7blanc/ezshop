@@ -1,20 +1,16 @@
 How 4 Features will be tested:
 
-The test plans should include specific test cases (user acceptance test cases) 
-that describe the data and the user activity that will be executed in order to verify proper functionality of the feature.
-The test plans should include a description of the test data that will be used to test the feature.
-The test plans should include a description of the test environment that will be used to test the feature.
-The test plans should include a description of the test results that will be used to test the feature.
-The test plan should include information about the user acceptance testers.
-
 Login
 User may enter their login credentials (username, password), and if username and password are found in the users table in the DB, the user may login. 
 If username or password are incorrect, user is alerted with an error message and what action they can take.
 The test data that will be used to test the feature will be of 2 types: valid data and invalid data. 
 Valid usernames will be found in the users table, not null and will be below 50 characters. Valid passwords will have a corresponding hash value in the users table, 
 are not null, have a minimum of 8 characters, and are below 60 characters long. 
-If test results indicate that current standards for logging in are not enough, then we will modify code accordingly. 
-User acceptance testers will idealy be people who can find holes in our programming logic. 
+The test environment will be the website on a server accessible to all user acceptance testers, and it will be focused on the login, register and home pages.
+If a user successfully logs in with credentials found in the users table, that will be a positive test result. If users are unable
+to login with proper credentials, that will be a negative result. 
+User acceptance testers will be given usernames and passwords currently in the database, and will be able to test 
+if there are alternative ways to login into a given user's account. 
 
 Register 
 A user may sign up for the website but they must make a username and password (minimum 8 characters). This information will be stored in the users table. 
@@ -24,16 +20,35 @@ User acceptance testers will enter data that is either: valid, or invalid. Valid
 not found in the table, and non-null passwords that are between 9 to 59 characters long. Invalid data will include null usernames and passwords, 
 usernames and passwords that violate size requirements, and usernames that are already found in the users table. 
 The testing environment will be on a server hosting the website for multiple user acceptance testers to be working on simutaneously,
-so we can see how the website would function in real time and what bugs arise. Negative test results indicate that functionality
-(code, requirements for usernames, passwords) are insufficient or unnecessary, and will require changes in current code. 
+so we can see how the website would function in real time and what bugs arise. The environment will take place on the register,
+home, and login pages. Positive test results will be that the user can successfully register an account with a valid username
+ and password. A negative result would be that users will fail to sign up for the website, or that they will be able to sign up
+for the website with invalid credentials. 
+User acceptance users will not be given anything except for access to the website and the ability to make various accounts on the site.
 
 Adding product to cart
 A user may add 1 or more items to their cart and they may remove any added items.
-Products in cart should appear across different sessions for the same user.
-The test data that will be used will be products from the 
+Products in cart should appear across different sessions for the same user. More specifically, whenever a user clicks on the 
+"add to cart" button on a given product page, that item should be added to that user's cart using the addcart function
+in cart.h. If a user clicks on "remove from cart" on given product in their cart, then that button will call the 
+removecart function in cart.h (it will not if the cart is already empty ). The test data will include the various types of
+products found in the products vector in cart.h. The test environment will be the website on a server accessible to all testers,
+and will be focused on the home page, product pages, cart page, and the checkout page. 
+Postive test results will involve products being properly added and removed from the cart, and every user has their own specific cart 
+separate from other users. Negative test results will be the cart function breaking (not adding items properly, not removing items,
+invalid number of items like negative or null values) 
+User acceptance testers will be each individually logged into an account found in the users table in the SQL
+database with an empty cart.  
 
 Checking out
 In order for a user to successfully check out, they need to fill out all required fields
 If they miss a field, they will not be allowed to check out and will be alerted to what fields need to be filled.
-Required fields include: name, address, email, and payment information (what kind of payment processor). 
+Required fields include: name (characters a-z), address(integers, puncutation and characters a-z), email (integers and 
+characters a-z, punctuation ), and payment information (what kind of payment processor, card with required fields). 
 This information will be stored in the database in a payment history table, and we will connect each individual user's purchase to their account (in the users table). 
+Valid test data will have values that meet each field's condition. Invalid test data will have values that go outside of acceptable
+characters (null values, integers where name should be, etc).
+The test environment will be on a server on the checkout page. The test results will either be postive (checkout successful, payment worked)
+or negative (checkout failed -- fields not properly filled or invalid data, or payment failed). 
+User acceptance users will each have a unique account on the website (found in users table) and will attempt to "purchase" items
+off of the website with various values for the checkout fields. 
