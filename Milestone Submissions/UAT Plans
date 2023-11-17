@@ -1,11 +1,28 @@
 How 3 Features will be tested:
 
+The test plans should include specific test cases (user acceptance test cases) 
+that describe the data and the user activity that will be executed in order to verify proper functionality of the feature.
+The test plans should include a description of the test data that will be used to test the feature.
+The test plans should include a description of the test environment that will be used to test the feature.
+The test plans should include a description of the test results that will be used to test the feature.
+The test plan should include information about the user acceptance testers.
+
 Login
-Provided username and password are found in the DB, the user may login. 
+User may enter their login credentials (username, password), and if username and password are found in the users table in the DB, the user may login. 
 If username or password are incorrect, user is alerted with an error message and what action they can take.
+The test data that will be used to test the feature will be of 2 types: valid data and invalid data. 
+
 
 Register 
+A user may sign up for the website but they must make a username and password (minimum 8 characters). This information will be stored in the users table. 
+If a user tries to sign up with an invalid password (less than 8 characters or null), then they will be redirected to the registration page with an alert 
+that gives them feedback on what happened. 
 
 Adding product to cart
+A user may add 1 or more items to their cart and they may remove any added items. Products in cart should appear across different sessions for the same user.
 
 Checking out
+In order for a user to successfully check out, they need to fill out all required fields
+If they miss a field, they will not be allowed to check out and will be alerted to what fields need to be filled.
+Required fields include: name, address, email, and payment information (what kind of payment processor). 
+This information will be stored in the database in a payment history table, and we will connect each individual user's purchase to their account (in the users table). 
