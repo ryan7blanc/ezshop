@@ -108,9 +108,9 @@ app.get('/welcome', (req, res) => {
       }
     } catch (error) {
       //res.json({message: 'Invalid input'});
-      //console.log("okay????")
+      //res = return
       res.redirect('/login');
-      return console.log("catch error");
+      
     }
       
   });
@@ -134,15 +134,25 @@ app.get('/register', (req, res) => {
 
 app.post('/register', async (req, res) => {
   var salt = bcrypt.genSaltSync(10);
-  //console.log('1');
-  var hash = await bcrypt.hashSync(req.body.password, salt);
+  var hash;
   const username = req.body.username;
+  //console.log('1');
+  if(req.body.password == null || username == null || req.body.password.length < 8)
+  {
+    //breaks the sql query, so it does not pass 
+    hash = 'abababababababababababababababababababababababababababababababababababababababababababababababababababababa';
+  }else {
+  hash = await bcrypt.hashSync(req.body.password, salt);
+  }
+  
   //const password = req.body.password;
+  
   const query = `INSERT INTO users (username, password) VALUES ('${username}', '${hash}') returning *;`; 
 
   db.any(query)
+  
         .then(data => {
-            console.log('DATA:', data);
+            //console.log('DATA:', data);
             //res.json({message: 'Success'});
             res.redirect('/login');
             
@@ -150,9 +160,10 @@ app.post('/register', async (req, res) => {
         })
         .catch(err => {
             // throw error
-  
+            //console.log(err);
+            //console.log(res.status); 
             res.redirect('/register');
-            return console.log(err);
+            
         });
 });
 

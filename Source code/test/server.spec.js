@@ -44,14 +44,32 @@ describe('Server!', () => {
       .request(server)
       .post('/register')
       .send({id: 1, username: 'User', password: 'password6'})
+      .redirects(0)
       .end((err, res) => {
-        expect(res).to.have.status(200);
-        console.log(res.body.message); 
-        expect(res.body.message).to.equals('Success');
+        expect(res).to.have.status(302);
+        expect(res).to.redirectTo("/login");
+        //console.log(res.body.message); 
+        //expect(res.body.message).to.equals('Success');
         done();
       });
   });
 
+  it('negative : /register', done => {
+    chai
+      .request(server)
+      .post('/register')
+      .send({username: 'cowboy', password: 'lala'})
+       .redirects(0)
+      .end((err, res) => {
+        console.log(res.status);
+        expect(res).to.have.status(302);
+        expect(res).to.redirectTo("/register");
+        //302 
+        //console.log(res.body.message); 
+        //expect(res.body.message).to.equals('Success');
+        done();
+      });
+  });
 
 
   //We are checking POST /add_user API by passing the user info in the correct order. This test case should pass and return a status 200 along with a "Success" message.
@@ -61,10 +79,14 @@ describe('Server!', () => {
       .request(server)
       .post('/login')
       .send({id: 2, username: 'User', password: 'password6'})
+      .redirects(0)
       .end((err, res) => {
-        expect(res).to.have.status(200);
-        console.log(res.body.message); 
-        expect(res.body.message).to.equals('Success');
+        //console.log(res);
+        //expect to redirect to home page
+        expect(res).to.have.status(302);
+        expect(res).to.redirectTo("/");
+        //console.log(res); 
+        
         done();
       });
   });
@@ -73,11 +95,12 @@ describe('Server!', () => {
     chai
       .request(server)
       .post('/login')
-      .send({id: '5', name: 10, password:'password'})
+      .send({id: '5', name: 10, password:'m'})
+      .redirects(0)
       .end((err, res) => {
-        expect(res).to.have.status(200);
-        console.log(res.body.message);
-        expect(res.body.message).to.equals('Invalid input');
+        
+        expect(res).to.have.status(302);
+        expect(res).to.redirectTo("/login");
         done();
       });
   });
