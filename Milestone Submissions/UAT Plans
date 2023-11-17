@@ -1,4 +1,4 @@
-How 3 Features will be tested:
+How 4 Features will be tested:
 
 The test plans should include specific test cases (user acceptance test cases) 
 that describe the data and the user activity that will be executed in order to verify proper functionality of the feature.
@@ -11,15 +11,26 @@ Login
 User may enter their login credentials (username, password), and if username and password are found in the users table in the DB, the user may login. 
 If username or password are incorrect, user is alerted with an error message and what action they can take.
 The test data that will be used to test the feature will be of 2 types: valid data and invalid data. 
-
+Valid usernames will be found in the users table, not null and will be below 50 characters. Valid passwords will have a corresponding hash value in the users table, 
+are not null, have a minimum of 8 characters, and are below 60 characters long. 
+If test results indicate that current standards for logging in are not enough, then we will modify code accordingly. 
+User acceptance testers will idealy be people who can find holes in our programming logic. 
 
 Register 
 A user may sign up for the website but they must make a username and password (minimum 8 characters). This information will be stored in the users table. 
 If a user tries to sign up with an invalid password (less than 8 characters or null), then they will be redirected to the registration page with an alert 
 that gives them feedback on what happened. 
+User acceptance testers will enter data that is either: valid, or invalid. Valid data will include non-null usernames under 50 characters
+not found in the table, and non-null passwords that are between 9 to 59 characters long. Invalid data will include null usernames and passwords, 
+usernames and passwords that violate size requirements, and usernames that are already found in the users table. 
+The testing environment will be on a server hosting the website for multiple user acceptance testers to be working on simutaneously,
+so we can see how the website would function in real time and what bugs arise. Negative test results indicate that functionality
+(code, requirements for usernames, passwords) are insufficient or unnecessary, and will require changes in current code. 
 
 Adding product to cart
-A user may add 1 or more items to their cart and they may remove any added items. Products in cart should appear across different sessions for the same user.
+A user may add 1 or more items to their cart and they may remove any added items.
+Products in cart should appear across different sessions for the same user.
+The test data that will be used will be products from the 
 
 Checking out
 In order for a user to successfully check out, they need to fill out all required fields
