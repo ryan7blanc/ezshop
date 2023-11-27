@@ -16,7 +16,9 @@ CREATE TABLE products(
 
 DROP TABLE IF EXISTS cart CASCADE;
 CREATE TABLE cart(
-    FOREIGN KEY (id) REFERENCES users (id) ON DELETE CASCADE,
-    product Integer[99],
-    FOREIGN KEY (EACH ELEMENT OF )
+    FOREIGN KEY (userid) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (productid) REFERENCES products (id) ON DELEte CASCADE
+    -- FOREIGN KEY (id) REFERENCES users (id) ON DELETE CASCADE,
+    -- product Integer[99],
+    -- FOREIGN KEY (EACH ELEMENT OF )
 );
