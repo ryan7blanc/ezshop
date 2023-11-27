@@ -16,7 +16,7 @@ product::product(string name, string description, int price, int review, int id)
     this->description = description;
     this->price = price;
     this->review = review;
-    this->id - id;
+    this->id = id;
 }
 
 string product::getname(){
