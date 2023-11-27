@@ -161,6 +161,7 @@ header {
   flex-direction: column;
    
 }
+/*Prevents title of products from getting too long*/
 .ellipsis {
   overflow: hidden;
   text-overflow: ellipsis; 
@@ -205,7 +206,7 @@ header {
 }
 #popUp
 {
-  background-color: green; 
+  background-color: #b4b4b4; 
   position:fixed; 
   height:500px; 
   width:500px;
