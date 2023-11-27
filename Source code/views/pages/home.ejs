@@ -2,17 +2,29 @@
 
 <main>
     <body>
+
+        <!--<div id="container">
+            <div  id="popUp" class="invisible">
+                <h4> baba</h4>
+                
+            </div>
+        </div>-->
+      
+        <%- include ('../partials/popUp') %>
+
         <section class="shop-section">
             <div class="shop-images">
                 <div class="shop-link">
                     <h3>Shop Laptops &amp; Tables</h3>
                     <img src="https://5.imimg.com/data5/SELLER/Default/2021/6/IM/OB/VX/7285296/portable-laptop-table.jpg" alt="card">
-                    <a href="#">Shop now</a>
+                    <a href="/product" id="product_link" onclick="openModal()">Shop now</a>
+                      
+
                 </div>
                 <div class="shop-link">
                     <h3>Shop Smartwatches</h3>
                     <img src="https://1.bp.blogspot.com/-3O7enn9Z_0g/Xh7aRnzKHVI/AAAAAAAAAE0/Y3FQijC1zyIhFPCvmerNu-G165C2YKWvACNcBGAsYHQ/s1600/71N1d2njruL._SL1500_.jpg" alt="card">
-                    <a href="#">Shop now</a>
+                    <a href="product2">Shop now</a>
                 </div>
                 <div class="shop-link">
                     <h3>Create with Strip Lights</h3>
@@ -27,5 +39,9 @@
               </div>
             </div>
           </section>
+
+ 
+        
+     
  
 <%- include ('../partials/footer') %>

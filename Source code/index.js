@@ -14,6 +14,8 @@ const axios = require('axios'); // To make HTTP requests from our server. We'll 
 app.use(express.static(__dirname + '/resources/css'));
 //fixes images 
 app.use(express.static(__dirname + '/resources/img'));
+//fixes js
+app.use(express.static(__dirname + '/resources/js'));
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
 // *****************************************************
@@ -116,6 +118,9 @@ app.get('/welcome', (req, res) => {
   });
 ////////////////////////
 
+
+
+
 app.get('/', (req,res) => {
   res.render('pages/home.ejs');
 });
@@ -165,6 +170,76 @@ app.post('/register', async (req, res) => {
             res.redirect('/register');
             
         });
+});
+
+//load product page
+app.get('/product', (req,res) => {
+  
+  axios({
+    url: `https://fakestoreapi.com/products?limit=4`,
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'Accept-Encoding': 'application/json',
+    },
+    
+  })
+    .then(results => {
+      console.log(results);
+      console.log(results.data[0].title);
+      res.render("pages/home.ejs",
+      {
+        title: results.data[0].title,
+      });
+
+    })
+      .catch(error =>
+        {
+          console.log(error);
+        });
+
+
+
+});
+
+app.get('/product2', (req,res) => {
+  
+  axios({
+    url: `https://fakestoreapi.com/products/category/electronics`,
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'Accept-Encoding': 'application/json',
+    },
+    
+  })
+    .then(results => {
+      console.log(results);
+      
+      
+      res.render("pages/category.ejs",
+       {
+        title: [results.data[0].title,results.data[1].title,
+         results.data[2].title,results.data[3].title,],
+         img: [results.data[0].image,results.data[1].image,
+         results.data[2].image,results.data[3].image,],
+         error: false,
+       });
+
+    })
+      .catch(error =>
+        {
+          console.log(error);
+
+          res.render("pages/category.ejs",
+          {
+           error:true,
+          });
+
+        });
+
+
+
 });
 
   module.exports = app.listen(3000);
