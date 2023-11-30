@@ -121,9 +121,6 @@ app.get('/welcome', (req, res) => {
 
 
 
-app.get('/', (req,res) => {
-  res.render('pages/home.ejs');
-});
 
 app.get('/register', (req, res) => {
   if(req.query.error){
@@ -173,10 +170,10 @@ app.post('/register', async (req, res) => {
 });
 
 //load product page
-app.get('/product', (req,res) => {
+app.get('/', (req,res) => {
   
   axios({
-    url: `https://fakestoreapi.com/products?limit=4`,
+    url: `https://fakestoreapi.com/products/categories`,
     method: 'GET',
     dataType: 'json',
     headers: {
@@ -187,9 +184,19 @@ app.get('/product', (req,res) => {
     .then(results => {
       console.log(results);
       console.log(results.data[0].title);
+
+      //capitalizes first letter, solution implemented from https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
+      let elec = results.data[0].charAt(0).toUpperCase() + results.data[0].slice(1);
+      let jewel = results.data[1].charAt(0).toUpperCase() + results.data[1].slice(1);
+      let mens = results.data[2].charAt(0).toUpperCase() + results.data[2].slice(1);
+      let womens = results.data[3].charAt(0).toUpperCase() + results.data[3].slice(1);
+
       res.render("pages/home.ejs",
       {
-        title: results.data[0].title,
+        first: elec,
+        second: jewel,
+        third: mens,
+        fourth: womens,
       });
 
     })
@@ -202,7 +209,7 @@ app.get('/product', (req,res) => {
 
 });
 
-app.get('/product2', (req,res) => {
+app.get('/electronics', (req,res) => {
   
   axios({
     url: `https://fakestoreapi.com/products/category/electronics`,
@@ -214,15 +221,127 @@ app.get('/product2', (req,res) => {
     
   })
     .then(results => {
-      console.log(results);
+      console.log(results.data.length);
       
+
       
       res.render("pages/category.ejs",
        {
-        title: [results.data[0].title,results.data[1].title,
-         results.data[2].title,results.data[3].title,],
-         img: [results.data[0].image,results.data[1].image,
-         results.data[2].image,results.data[3].image,],
+        output: results.data,
+         error: false,
+       });
+
+    })
+      .catch(error =>
+        {
+          console.log(error);
+
+          res.render("pages/category.ejs",
+          {
+           error:true,
+          });
+
+        });
+
+
+
+});
+
+app.get('/jewelery', (req,res) => {
+  
+  axios({
+    url: `https://fakestoreapi.com/products/category/jewelery`,
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'Accept-Encoding': 'application/json',
+    },
+    
+  })
+    .then(results => {
+      console.log(results.data.length);
+      
+
+      
+      res.render("pages/category.ejs",
+       {
+        output: results.data,
+         error: false,
+       });
+
+    })
+      .catch(error =>
+        {
+          console.log(error);
+
+          res.render("pages/category.ejs",
+          {
+           error:true,
+          });
+
+        });
+
+
+
+});
+
+app.get('/mens', (req,res) => {
+  
+  axios({
+    url: `https://fakestoreapi.com/products/category/men's clothing`,
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'Accept-Encoding': 'application/json',
+    },
+    
+  })
+    .then(results => {
+      console.log(results.data.length);
+      
+
+      
+      res.render("pages/category.ejs",
+       {
+        output: results.data,
+         error: false,
+       });
+
+    })
+      .catch(error =>
+        {
+          console.log(error);
+
+          res.render("pages/category.ejs",
+          {
+           error:true,
+          });
+
+        });
+
+
+
+});
+
+app.get('/womens', (req,res) => {
+  
+  axios({
+    url: `https://fakestoreapi.com/products/category/women's clothing`,
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'Accept-Encoding': 'application/json',
+    },
+    
+  })
+    .then(results => {
+      console.log(results.data.length);
+      
+
+      
+      res.render("pages/category.ejs",
+       {
+        output: results.data,
          error: false,
        });
 
