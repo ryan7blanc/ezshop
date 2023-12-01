@@ -4,6 +4,8 @@
 
 const express = require('express'); // To build an application server or API
 const app = express();
+const multer  = require('multer'); //middleware that handles formdata objs
+const upload = multer(); //need for multer
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
 const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
@@ -360,5 +362,24 @@ app.get('/womens', (req,res) => {
 
 
 });
+
+
+app.post('/display', upload.none(), async (req, res) => {
+
+ 
+
+  let title = req.body.title;
+  let image = req.body.image; 
+  let price = req.body.price; 
+
+  console.log(title);
+  console.log('whats up');
+
+  let all = [title, image, price];
+
+  //res.send(all); 
+
+})
+
 
   module.exports = app.listen(3000);
