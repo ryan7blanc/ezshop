@@ -120,6 +120,10 @@ app.get('/welcome', (req, res) => {
   });
 ////////////////////////
 
+app.get('/addcart', (req,res) => {
+  var addproduct = `insert into cart(userid, productid) values ({$user.id}, {$product.id})`;
+});
+
 
 
 
