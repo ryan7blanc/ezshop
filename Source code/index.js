@@ -143,9 +143,6 @@ app.post('/addcart', (req,res) => {
 });
 
 
-
-
-
 app.get('/register', (req, res) => {
   if(req.query.error){
   res.render("pages/register.ejs",{
@@ -196,7 +193,7 @@ app.post('/register', async (req, res) => {
 
 //load product page
 app.get('/', (req,res) => {
-  
+ 
   axios({
     url: `https://fakestoreapi.com/products/categories`,
     method: 'GET',

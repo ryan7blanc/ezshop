@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users(
     username VARCHAR(50) NOT NULL,
     password CHAR(60) NOT NULL,
-    id SERIAL PRIMARY KEY
+    user_id SERIAL PRIMARY KEY
 );
 
 DROP TABLE IF EXISTS products CASCADE;
@@ -11,13 +11,16 @@ CREATE TABLE products(
     description VARCHAR(200) NOT NULL,
     price INT NOT NULL,
     review INT NOT NULL,
-    id SERIAL PRIMARY KEY NOT NULL
+    product_id SERIAL PRIMARY KEY NOT NULL
 );
 
 DROP TABLE IF EXISTS cart CASCADE;
 CREATE TABLE cart(
-    FOREIGN KEY (userid) REFERENCES users (id) ON DELETE CASCADE,
-    FOREIGN KEY (productid) REFERENCES products (id) ON DELEte CASCADE
+    user_id INT,
+    CONSTRAINT fk_userid
+    user_id FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    product_id FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE CASCADE,
+    cartid SERIAL PRIMARY KEY NOT NULL
     -- FOREIGN KEY (id) REFERENCES users (id) ON DELETE CASCADE,
     -- product Integer[99],
     -- FOREIGN KEY (EACH ELEMENT OF )
