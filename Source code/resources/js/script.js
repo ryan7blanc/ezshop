@@ -1,3 +1,5 @@
+let count = 0; 
+
 function openModal()
 {
     
@@ -36,5 +38,27 @@ function openModal()
     xhr.send(formdata);
 
     
+
+}
+
+function addCart(value)
+{
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST","/addcart", true);
+    xhr.send();
+
+
+    if(value == "add")
+    {
+        count = count + 1; 
+    } else if (value == "remove")
+    {
+        count = count - 1; 
+    }
+
+    document.getElementById("product-count").innerHTML = count; 
+
+    console.log(count);
 
 }
