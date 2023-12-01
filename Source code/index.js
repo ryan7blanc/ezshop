@@ -66,7 +66,15 @@ app.use(
   })
 );
 
+let count = 0; 
 
+let user = {
+
+  user_id: undefined,
+  username: undefined,
+  password: undefined, 
+
+};
 
 
 
@@ -82,7 +90,7 @@ app.get('/welcome', (req, res) => {
 
   app.post('/login', async (req,res) => {
     try {
-      const query = "select password from users where username = $1";
+      const query = "select username, password, id from users where username = $1";
       const data = await db.any(query, [req.body.username])
       
       if (data[0].length == 0)
@@ -94,11 +102,16 @@ app.get('/welcome', (req, res) => {
         const match = await bcrypt.compare(req.body.password, data[0].password);
         if (match)
         {
+          console.log('heres data');
+          console.log(data);
+          console.log(data[0].id);
+
           //save user details in session like in lab 8
-          req.session.user = data.user;
+          req.session.user = data[0].user;
+          req.session.user_id= data[0].id;
           req.session.save();
           //res.json({message: 'Success'});
-         
+         console.log(req.session.user_id);
           res.redirect("/");
          
         }
@@ -120,7 +133,12 @@ app.get('/welcome', (req, res) => {
   });
 ////////////////////////
 
-app.get('/addcart', (req,res) => {
+app.post('/addcart', (req,res) => {
+
+  let usrId = req.session.user_id;
+  console.log('heres the id!!');
+  console.log(usrId);
+
   var addproduct = `insert into cart(userid, productid) values ({$user.id}, {$product.id})`;
 });
 
@@ -160,7 +178,8 @@ app.post('/register', async (req, res) => {
   db.any(query)
   
         .then(data => {
-            //console.log('DATA:', data);
+            console.log('DATA:', data);
+            console.log(req.session);
             //res.json({message: 'Success'});
             res.redirect('/login');
             
@@ -188,8 +207,8 @@ app.get('/', (req,res) => {
     
   })
     .then(results => {
-      console.log(results);
-      console.log(results.data[0].title);
+      //console.log(results);
+      //console.log(results.data[0].title);
 
       //capitalizes first letter, solution implemented from https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
       let elec = results.data[0].charAt(0).toUpperCase() + results.data[0].slice(1);
@@ -228,6 +247,7 @@ app.get('/electronics', (req,res) => {
   })
     .then(results => {
       console.log(results.data.length);
+      
       
 
       
