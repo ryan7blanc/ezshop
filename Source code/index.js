@@ -123,9 +123,6 @@ app.get('/addcart', (req,res) => {
 });
 
 
-
-
-
 app.get('/register', (req, res) => {
   if(req.query.error){
   res.render("pages/register.ejs",{
