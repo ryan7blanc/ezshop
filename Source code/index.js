@@ -14,6 +14,8 @@ const axios = require('axios'); // To make HTTP requests from our server. We'll 
 app.use(express.static(__dirname + '/resources/css'));
 //fixes images 
 app.use(express.static(__dirname + '/resources/img'));
+//fixes js
+app.use(express.static(__dirname + '/resources/js'));
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
 // *****************************************************
@@ -120,9 +122,9 @@ app.get('/addcart', (req,res) => {
   var addproduct = `insert into cart(userid, productid) values ({$user.id}, {$product.id})`;
 });
 
-app.get('/', (req,res) => {
-  res.render('pages/home.ejs');
-});
+
+
+
 
 app.get('/register', (req, res) => {
   if(req.query.error){
@@ -169,6 +171,198 @@ app.post('/register', async (req, res) => {
             res.redirect('/register');
             
         });
+});
+
+//load product page
+app.get('/', (req,res) => {
+  
+  axios({
+    url: `https://fakestoreapi.com/products/categories`,
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'Accept-Encoding': 'application/json',
+    },
+    
+  })
+    .then(results => {
+      console.log(results);
+      console.log(results.data[0].title);
+
+      //capitalizes first letter, solution implemented from https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
+      let elec = results.data[0].charAt(0).toUpperCase() + results.data[0].slice(1);
+      let jewel = results.data[1].charAt(0).toUpperCase() + results.data[1].slice(1);
+      let mens = results.data[2].charAt(0).toUpperCase() + results.data[2].slice(1);
+      let womens = results.data[3].charAt(0).toUpperCase() + results.data[3].slice(1);
+
+      res.render("pages/home.ejs",
+      {
+        first: elec,
+        second: jewel,
+        third: mens,
+        fourth: womens,
+      });
+
+    })
+      .catch(error =>
+        {
+          console.log(error);
+        });
+
+
+
+});
+
+app.get('/electronics', (req,res) => {
+  
+  axios({
+    url: `https://fakestoreapi.com/products/category/electronics`,
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'Accept-Encoding': 'application/json',
+    },
+    
+  })
+    .then(results => {
+      console.log(results.data.length);
+      
+
+      
+      res.render("pages/category.ejs",
+       {
+        output: results.data,
+         error: false,
+       });
+
+    })
+      .catch(error =>
+        {
+          console.log(error);
+
+          res.render("pages/category.ejs",
+          {
+           error:true,
+          });
+
+        });
+
+
+
+});
+
+app.get('/jewelery', (req,res) => {
+  
+  axios({
+    url: `https://fakestoreapi.com/products/category/jewelery`,
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'Accept-Encoding': 'application/json',
+    },
+    
+  })
+    .then(results => {
+      console.log(results.data.length);
+      
+
+      
+      res.render("pages/category.ejs",
+       {
+        output: results.data,
+         error: false,
+       });
+
+    })
+      .catch(error =>
+        {
+          console.log(error);
+
+          res.render("pages/category.ejs",
+          {
+           error:true,
+          });
+
+        });
+
+
+
+});
+
+app.get('/mens', (req,res) => {
+  
+  axios({
+    url: `https://fakestoreapi.com/products/category/men's clothing`,
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'Accept-Encoding': 'application/json',
+    },
+    
+  })
+    .then(results => {
+      console.log(results.data.length);
+      
+
+      
+      res.render("pages/category.ejs",
+       {
+        output: results.data,
+         error: false,
+       });
+
+    })
+      .catch(error =>
+        {
+          console.log(error);
+
+          res.render("pages/category.ejs",
+          {
+           error:true,
+          });
+
+        });
+
+
+
+});
+
+app.get('/womens', (req,res) => {
+  
+  axios({
+    url: `https://fakestoreapi.com/products/category/women's clothing`,
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'Accept-Encoding': 'application/json',
+    },
+    
+  })
+    .then(results => {
+      console.log(results.data.length);
+      
+
+      
+      res.render("pages/category.ejs",
+       {
+        output: results.data,
+         error: false,
+       });
+
+    })
+      .catch(error =>
+        {
+          console.log(error);
+
+          res.render("pages/category.ejs",
+          {
+           error:true,
+          });
+
+        });
+
+
+
 });
 
   module.exports = app.listen(3000);

@@ -1,0 +1,1 @@
+Create JavaScript functions to add products to cart relation. Be able to check all products related to user by cart at check out.

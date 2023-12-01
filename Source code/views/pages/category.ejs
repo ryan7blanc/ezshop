@@ -1,0 +1,29 @@
+<%- include ('../partials/header') %>
+
+<%- include ('../partials/popUp') %>
+
+<section class="shop-section">
+    <div class="shop-images" >
+        <% if(error){ %>
+            <div class="shop-link" style="text-align:center;height:300px;">
+                <h1>An error occured in showing results, please try again later.</h3>
+            </div>
+
+        <% } else {%>
+        <% for(var i = 0; i < output.length; i++){ %>
+            
+            <div class="shop-link">
+                <h3 class="ellipsis" id='ti_<%= i%>'>Purchase <%= output[i].title %></h3>
+                <img src="<%= output[i].image%>" >
+                <a href="#" onclick="openModal()">Buy Now</a>
+            </div>
+            
+
+        <% } %>
+
+    <% } %>
+    </div>
+</section>
+
+
+<%- include ('../partials/footer') %>
