@@ -116,6 +116,10 @@ app.get('/welcome', (req, res) => {
   });
 ////////////////////////
 
+app.get('/addcart', (req,res) => {
+  var addproduct = `insert into cart(userid, productid) values ({$user.id}, {$product.id})`;
+});
+
 app.get('/', (req,res) => {
   res.render('pages/home.ejs');
 });
