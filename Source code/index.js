@@ -172,7 +172,7 @@ app.post('/register', async (req, res) => {
 
 //load product page
 app.get('/', (req,res) => {
-  
+ 
   axios({
     url: `https://fakestoreapi.com/products/categories`,
     method: 'GET',
@@ -185,6 +185,7 @@ app.get('/', (req,res) => {
     .then(results => {
       console.log(results);
       console.log(results.data[0].title);
+      console.log(req.session.user)
 
       //capitalizes first letter, solution implemented from https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
       let elec = results.data[0].charAt(0).toUpperCase() + results.data[0].slice(1);
