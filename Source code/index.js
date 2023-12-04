@@ -268,8 +268,7 @@ app.get('/electronics', (req,res) => {
     .then(results => {
       console.log(results.data.length);
       
-      
-      storeDataInDatabase(data, "electronics");
+      storeDataInDatabase(results.data, "electronics");
       
       res.render("pages/category.ejs",
        {
@@ -307,7 +306,7 @@ app.get('/jewelery', (req,res) => {
     .then(results => {
       console.log(results.data.length);
       
-      storeDataInDatabase(data, "jewelery");
+      storeDataInDatabase(results.data, "jewelery");
       
       res.render("pages/category.ejs",
        {
@@ -345,7 +344,7 @@ app.get('/mens', (req,res) => {
     .then(results => {
       console.log(results.data.length);
       
-      storeDataInDatabase(data, "mens");
+      storeDataInDatabase(results.data, "mens");
       
       res.render("pages/category.ejs",
        {
@@ -383,7 +382,7 @@ app.get('/womens', (req,res) => {
     .then(results => {
       console.log(results.data.length);
       
-      storeDataInDatabase(data, "womens");
+      storeDataInDatabase(results.data, "womens");
       
       res.render("pages/category.ejs",
        {
