@@ -16,12 +16,9 @@ CREATE TABLE products(
 
 DROP TABLE IF EXISTS cart CASCADE;
 CREATE TABLE cart(
-    user_id INT,
-    CONSTRAINT fk_userid
-    user_id FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
-    product_id FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE CASCADE,
-    cartid SERIAL PRIMARY KEY NOT NULL
-    -- FOREIGN KEY (id) REFERENCES users (id) ON DELETE CASCADE,
-    -- product Integer[99],
-    -- FOREIGN KEY (EACH ELEMENT OF )
+    cart_id SERIAL PRIMARY KEY NOT NULL,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL, 
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE CASCADE
 );

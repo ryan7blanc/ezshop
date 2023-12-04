@@ -84,13 +84,44 @@ app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
   });
 
+  app.get('/count', (req, res) => {
+    let usrId = req.session.user_id;
+    let query = `select count(product_id) from cart where user_id = ${usrId} ;`; 
+
+    db.one(query)
+    .then (data2 => {
+      console.log(data2); 
+
+    })
+    .catch (err =>{
+      return console.log(err);
+    });
+
+
+  }); 
+
+  /*function getCount()
+  {
+    let usrId = req.session.user_id;
+    let query = `select count(product_id) from cart where user_id = ${usrId} ;`; 
+
+    db.one(query)
+    .then (data2 => {
+      console.log(data2); 
+
+    })
+    .catch (err =>{
+      return console.log(err);
+    });
+  }*/
+
   app.get('/login', (req,res) => {
     res.render('pages/login.ejs');
   });
 
   app.post('/login', async (req,res) => {
     try {
-      const query = "select username, password, id from users where username = $1";
+      const query = "select username, password, user_id from users where username = $1";
       const data = await db.any(query, [req.body.username])
       
       if (data[0].length == 0)
@@ -108,7 +139,7 @@ app.get('/welcome', (req, res) => {
 
           //save user details in session like in lab 8
           req.session.user = data[0].user;
-          req.session.user_id= data[0].id;
+          req.session.user_id= data[0].user_id;
           req.session.save();
           //res.json({message: 'Success'});
          console.log(req.session.user_id);
@@ -136,10 +167,107 @@ app.get('/welcome', (req, res) => {
 app.post('/addcart', (req,res) => {
 
   let usrId = req.session.user_id;
+  let name= req.body.title;
+
   console.log('heres the id!!');
   console.log(usrId);
+  console.log('heres the product title');
+  console.log(name);
+  //remove any leading or trailing spaces from name
+  name = name.trim();
 
-  var addproduct = `insert into cart(userid, productid) values ({$user.id}, {$product.id})`;
+  //find product ID
+  let findname = `select product_id from products where name = '${name}';`;
+
+  db.task('get-everything', task => {
+    return task.batch([
+        task.any(findname), //finds product ID
+    ]);
+})
+.then(function (data) {
+  
+  console.log(data); 
+  console.log('got product id');
+  let prod_id = data[0][0].product_id;
+  console.log(prod_id);
+  //insert into cart
+  let add = `insert into cart(user_id, product_id) values (${usrId}, ${prod_id}) returning *;`;
+
+  db.any(add)
+    .then (data2 => {
+      console.log(data2); 
+      //getCount(); 
+    })
+    .catch (err =>{
+      return console.log(err);
+    });
+
+})
+.catch(function (err) {
+  return console.log(err);
+});
+
+  //var addproduct = `insert into cart(userid, productid) values (${usrId}, ${$productId});`;
+
+});
+
+app.delete('/delete', (req,res) => {
+
+  let usrId = req.session.user_id;
+  let name= req.body.title;
+  name = name.trim();
+  
+  let del = `delete from cart where productid = "${productId}" AND userid = "${usrId}";`
+
+  let findname = `select product_id from products where name = '${name}';`;
+
+  db.any(findname)
+  .then(data => {
+    //console.log('deleted successfully!');
+    //res.render("pages/checkout.ejs");
+    let prod_id = data[0][0].product_id;
+    console.log('heres id'+ prod_id);
+
+    let del = `delete from cart where productid = "${prod_id}" AND userid = "${usrId}" returning *;`
+
+    db.any(del)
+    .then (data2 => {
+      console.log(data2); 
+
+    })
+    .catch (err =>{
+      return console.log(err);
+    });
+
+  })
+  .catch(err => {
+    // throw error
+  });
+
+});
+
+app.get('/cart', (req,res) => {
+
+
+
+  let usrId = req.session.user_id;
+
+  //let prodId = `select product_id from carts where user_id = ${usrId};`;//this can be multiple products...
+  let prodId = `select name from products where product_id = (select product_id from carts where user_id = ${usrId});`;
+
+  res.render("pages/checkout.ejs");
+  
+  /*db.any(find)
+  .then (data =>
+    {
+      console.log(data);
+      //how do i do a request for every product... pain
+      //maybe redirect it to diferent endpt
+    })
+    .catch (err => {
+      console.log(err); 
+    });*/
+
 });
 
 

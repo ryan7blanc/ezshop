@@ -44,9 +44,9 @@ function openModal()
 function addCart(value)
 {
 
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST","/addcart", true);
-    xhr.send();
+    //let xhr = new XMLHttpRequest();
+    //xhr.open("POST","/addcart", true);
+    //xhr.send();
 
 
     if(value == "add")

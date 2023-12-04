@@ -11,12 +11,12 @@
 
         <% } else {%>
         <% for(var i = 0; i < output.length; i++){ %>
-            <form id="formID" >
+            <form id="formID" method="POST" action="/addcart">
             <div class="shop-link">
                 
                
 
-                    <!--use this https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog !!-->
+                    
                     <input name="title" value="<%= output[i].title %>" class="invisible">
                     <h3 class="ellipsis" id='ti_<%= i%>'>Purchase <%= output[i].title %></h3>
                     <input name="image" value="<%= output[i].image %>" class="invisible">
@@ -33,8 +33,8 @@
                             </div>
                         </div>
 
-                        <input type="button" value="Buy now" onclick="openModal()" >
-                        <input type="button" value="Add to cart" onclick="addCart('add')">
+                        <input type="button" value="Buy now" href="/cart" >
+                        <input type="submit" value="Add to cart" onclick="addCart('add')">
                         <p>$<%= output[i].price %></p>
                         
                     </div>

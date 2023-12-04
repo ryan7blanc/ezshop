@@ -95,7 +95,7 @@ describe('Server!', () => {
     chai
       .request(server)
       .post('/login')
-      .send({id: '5', name: 10, password:'m'})
+      .send({name: null, password:'m'})
       .redirects(0)
       .end((err, res) => {
         
