@@ -11,7 +11,8 @@ CREATE TABLE products(
     description VARCHAR(200) NOT NULL,
     price INT NOT NULL,
     review INT NOT NULL,
-    product_id SERIAL PRIMARY KEY NOT NULL
+    product_id SERIAL PRIMARY KEY NOT NULL,
+    category VARCHAR(20) NOT NULL
 );
 
 DROP TABLE IF EXISTS cart CASCADE;
