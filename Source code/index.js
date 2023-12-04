@@ -9,7 +9,7 @@ const upload = multer(); //need for multer
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
 const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
-//const bcrypt = require('bcrypt'); //  To hash passwords
+const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part B.
 
 //fixes css!! 
@@ -99,8 +99,7 @@ app.get('/welcome', (req, res) => {
       }
       else 
       {
-        const match = 1;
-        //const match = await bcrypt.compare(req.body.password, data[0].password);
+        const match = await bcrypt.compare(req.body.password, data[0].password);
         if (match)
         {
           console.log('heres data');
@@ -156,41 +155,41 @@ app.get('/register', (req, res) => {
   }
 });
 
-// app.post('/register', async (req, res) => {
-//   var salt = bcrypt.genSaltSync(10);
-//   var hash;
-//   const username = req.body.username;
-//   //console.log('1');
-//   if(req.body.password == null || username == null || req.body.password.length < 8)
-//   {
-//     //breaks the sql query, so it does not pass 
-//     hash = 'abababababababababababababababababababababababababababababababababababababababababababababababababababababa';
-//   }else {
-//   hash = await bcrypt.hashSync(req.body.password, salt);
-//   }
+app.post('/register', async (req, res) => {
+  var salt = bcrypt.genSaltSync(10);
+  var hash;
+  const username = req.body.username;
+  //console.log('1');
+  if(req.body.password == null || username == null || req.body.password.length < 8)
+  {
+    //breaks the sql query, so it does not pass 
+    hash = 'abababababababababababababababababababababababababababababababababababababababababababababababababababababa';
+  }else {
+  hash = await bcrypt.hashSync(req.body.password, salt);
+  }
   
-//   //const password = req.body.password;
+  //const password = req.body.password;
   
-//   const query = `INSERT INTO users (username, password) VALUES ('${username}', '${hash}') returning *;`; 
+  const query = `INSERT INTO users (username, password) VALUES ('${username}', '${hash}') returning *;`; 
 
-//   db.any(query)
+  db.any(query)
   
-//         .then(data => {
-//             console.log('DATA:', data);
-//             console.log(req.session);
-//             //res.json({message: 'Success'});
-//             res.redirect('/login');
+        .then(data => {
+            console.log('DATA:', data);
+            console.log(req.session);
+            //res.json({message: 'Success'});
+            res.redirect('/login');
             
 
-//         })
-//         .catch(err => {
-//             // throw error
-//             //console.log(err);
-//             //console.log(res.status); 
-//             res.redirect('/register');
+        })
+        .catch(err => {
+            // throw error
+            //console.log(err);
+            //console.log(res.status); 
+            res.redirect('/register');
             
-//         });
-// });
+        });
+});
 
 //load product page
 app.get('/', (req,res) => {
