@@ -1,0 +1,9 @@
+Discuss final plans.
+Finish checkout page with options to pay for products.
+
+Ryan: Continue with presentation and check to make sure user is logged in to use website
+Nathan: Work on database for products to correlate with front-end
+Benji: Finish checkout page
+Anna: Finish checkout page
+
+Team meeting on Wednesday 3:30 to review project
