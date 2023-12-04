@@ -359,6 +359,29 @@ app.get('/', (req,res) => {
 
 });
 
+async function storeDataInDatabase(data, category) {
+  try {
+    for (const product of data) {
+      const insertQuery = `
+        INSERT INTO products (name, description, price, review, product_id, category)
+        VALUES ($1, $2, $3, $4, $5, $6);`;
+
+      await db.none(insertQuery, [
+        product.title,
+        product.description,
+        product.price,
+        product.rating.rate,
+        product.id,
+        category,
+      ]);
+    }
+
+    console.log(`Data for category '${category}' successfully stored in the database`);
+  } catch (error) {
+    console.error(`Error storing data for category '${category}':`, error.message || error);
+  }
+}
+
 app.get('/electronics', (req,res) => {
   
   axios({
@@ -373,8 +396,7 @@ app.get('/electronics', (req,res) => {
     .then(results => {
       console.log(results.data.length);
       
-      
-
+      storeDataInDatabase(results.data, "electronics");
       
       res.render("pages/category.ejs",
        {
@@ -412,7 +434,7 @@ app.get('/jewelery', (req,res) => {
     .then(results => {
       console.log(results.data.length);
       
-
+      storeDataInDatabase(results.data, "jewelery");
       
       res.render("pages/category.ejs",
        {
@@ -450,7 +472,7 @@ app.get('/mens', (req,res) => {
     .then(results => {
       console.log(results.data.length);
       
-
+      storeDataInDatabase(results.data, "mens");
       
       res.render("pages/category.ejs",
        {
@@ -488,7 +510,7 @@ app.get('/womens', (req,res) => {
     .then(results => {
       console.log(results.data.length);
       
-
+      storeDataInDatabase(results.data, "womens");
       
       res.render("pages/category.ejs",
        {
