@@ -5,6 +5,9 @@ Team Name: Team EZ Shop
 
 Team Number: 03
 
+# Dependencies: Multer https://www.npmjs.com/package/multer
+
+
 Anna Soukhovei @annasouk anna.soukhovei@colorado.edu
 
 Louis Blanc @ryan7blanc lobl1307@colorado.edu
