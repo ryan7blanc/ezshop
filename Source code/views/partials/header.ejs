@@ -22,17 +22,33 @@
             <span class="material-symbols-outlined">search</span>
           </div>
         </div>
+        <% if(!locals.logged){%>
         <div class="sign-in">
          <a href="login"> <p>sign in</p>
         </div>
+        <% }%> 
+       
+        
         <!-- added register button -->
+        <% if (locals.logged){ %>
+          <div class="sign-in">
+            <a href="login"> <p>log out</p>
+           </div>
+          <% } %>
+          <% if (!locals.logged){%>
         <div class="sign-in">
           <a href="register"> <p>register</p>
          </div>
+         <%}%>
         <div class="cart">
+          <% if(locals.logged){ %>
           <a href="/cart">
+            <%}%>
+            <% if(!locals.logged){ %>
+              <a href="#">
+                <%}%>
             <span class="material-symbols-outlined cart-icon">shopping_cart</span>
-            <div id="product-count"> </div>
+            <div id="product-count"><%=count%> </div>
           </a>
         </div>
       </nav>

@@ -18,7 +18,15 @@ DROP TABLE IF EXISTS cart CASCADE;
 CREATE TABLE cart(
     cart_id SERIAL PRIMARY KEY NOT NULL,
     user_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS items CASCADE;
+CREATE TABLE items(
+    item_id SERIAL PRIMARY KEY NOT NULL,
+    cart_id INT NOT NULL,
     product_id INT NOT NULL, 
-    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE CASCADE
+    amount INT NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE CASCADE,
+    FOREIGN KEY (cart_id) REFERENCES cart (cart_id) ON DELETE CASCADE
 );

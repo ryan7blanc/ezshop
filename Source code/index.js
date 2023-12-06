@@ -84,45 +84,50 @@ app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
   });
 
-  app.get('/count', (req, res) => {
-    let usrId = req.session.user_id;
-    let query = `select count(product_id) from cart where user_id = ${usrId} ;`; 
-
-    db.one(query)
-    .then (data2 => {
-      console.log(data2); 
-
-    })
-    .catch (err =>{
-      return console.log(err);
-    });
-
-
-  }); 
-
-  /*function getCount()
+  async function getCount(usrId)
   {
-    let usrId = req.session.user_id;
-    let query = `select count(product_id) from cart where user_id = ${usrId} ;`; 
+    /*if(usrId == undefined || usrId == '' || usrId == null)
+  {
+    console.log('undefined'); 
+    return 0; 
+  }
+    
+    let getcart_id = `select cart_id from cart where user_id = ${usrId};`;
+    let cart_id = await db.any(getcart_id); 
+    //console.log('count: ' + cart_id[0].cart_id);
+    cart_id = cart_id[0].cart_id;  
+    let findcount = ` select sum(amount) from items where cart_id = ${cart_id};`;
+    let count = await db.any(findcount);
+    console.log(count[0].sum); 
+    if(count[0].cart_id == '')
+    {
+      return 0;
+    } else {
+    return count[0].sum; 
+    }*/
+    console.log('function'); 
+  }
 
-    db.one(query)
-    .then (data2 => {
-      console.log(data2); 
+ 
 
-    })
-    .catch (err =>{
-      return console.log(err);
+  app.get('/login', async (req,res) => {
+    let count = await asyncFunctionsgetCount(req.session.user_id);
+    console.log('getCount happens');
+    res.render('pages/login.ejs',
+    {
+      count: count, 
     });
-  }*/
-
-  app.get('/login', (req,res) => {
-    res.render('pages/login.ejs');
   });
 
   app.post('/login', async (req,res) => {
     try {
+
+      let count = getCount(req.session.user_id);
+      console.log('getCount happens');
+
       const query = "select username, password, user_id from users where username = $1";
       const data = await db.any(query, [req.body.username])
+      
       
       if (data[0].length == 0)
       {
@@ -130,18 +135,36 @@ app.get('/welcome', (req, res) => {
       }
       else 
       {
+
         const match = await bcrypt.compare(req.body.password, data[0].password);
         if (match)
         {
           console.log('heres data');
           console.log(data);
-          console.log(data[0].id);
+          
 
           //save user details in session like in lab 8
           req.session.user = data[0].user;
           req.session.user_id= data[0].user_id;
           req.session.save();
           //res.json({message: 'Success'});
+
+          const find = `select user_id from cart where user_id = ${data[0].user_id};`
+          let output = await db.any(find); 
+          console.log('find output:')
+          console.log(output);
+
+          if(output == '')
+          {
+            //add to cart!! otherwise doesn't 
+            const insert_cart = `insert into cart (user_id) values (${data[0].user_id}) returning *;`
+            output = await db.any(insert_cart); 
+            console.log(output); 
+          }
+
+          //const insert_cart = `sert into cart (user_id) values (${data[0].user_id}) returning *;`
+          //let output = await db.inany(insert_cart); 
+          //console.log(output); 
          console.log(req.session.user_id);
           res.redirect("/");
          
@@ -151,6 +174,7 @@ app.get('/welcome', (req, res) => {
            res.render("pages/login.ejs",{
             message: 'Incorrect username or password.',
             error: true, 
+            count: count, 
           });
         }
       }
@@ -164,10 +188,11 @@ app.get('/welcome', (req, res) => {
   });
 ////////////////////////
 
-app.post('/addcart', (req,res) => {
+app.post('/addcart', async (req,res) => {
 
   let usrId = req.session.user_id;
   let name= req.body.title;
+  let amount = req.body.amount; 
 
   console.log('heres the id!!');
   console.log(usrId);
@@ -177,92 +202,214 @@ app.post('/addcart', (req,res) => {
   name = name.trim();
 
   //find product ID
+  console.log('start');
+  console.log(amount);
   let findname = `select product_id from products where name = '${name}';`;
-
-  db.task('get-everything', task => {
-    return task.batch([
-        task.any(findname), //finds product ID
-    ]);
-})
-.then(function (data) {
+  let productId= await db.any(findname); 
+  productId = productId[0].product_id;
+  //console.log(productId[0].product_id);
+  let findcart = `select cart_id from cart where user_id = ${usrId}`;
+  let cart_id = await db.any(findcart); 
+  cart_id = cart_id[0].cart_id;
+  console.log(cart_id + "card_id ?? ??");   
+  //console.log(cart_id[0].cart_id);
   
-  console.log(data); 
-  console.log('got product id');
-  let prod_id = data[0][0].product_id;
-  console.log(prod_id);
-  //insert into cart
-  let add = `insert into cart(user_id, product_id) values (${usrId}, ${prod_id}) returning *;`;
+  //checking if a product is already in items table
+  let check = `select product_id from items where (product_id = ${productId}) AND (cart_id = ${cart_id})`;
+  check = await db.any(check); 
+  
+  console.log(check[0]); 
 
-  db.any(add)
-    .then (data2 => {
-      console.log(data2); 
-      //getCount(); 
-    })
-    .catch (err =>{
-      return console.log(err);
-    });
+  if(check[0] == undefined)
+  {
+    //not in cart, add to items
+    console.log("not in cart");
+    let add = `insert into items(cart_id, product_id, amount) values (${cart_id}, ${productId}, ${amount}) returning *;`; 
+    let results = await db.any(add);
+    console.log(results); 
+  } else
+  {
+    console.log("in cart");
+    //in cart, add the amounts together
+    let findAmt = `select amount from items where (product_id = ${productId}) AND (cart_id = ${cart_id}) `;
+    let amount1 = await db.any(findAmt); 
+    amount1 = amount1[0].amount; 
+    //console.log(amount1[0].amount); 
+    //console.log(Number(amount));
+    //console.log(Number(amount1));
+    amount = Number(amount) + Number(amount1);
+    //console.log(sum);
+    //amount = amount1 + amount; 
+    console.log(amount);
 
-})
-.catch(function (err) {
-  return console.log(err);
+    let deleteDupe = `delete from items where (product_id = ${productId}) AND (cart_id = ${cart_id})`;
+    await db.any(deleteDupe); 
+
+    check = `select product_id from items where (product_id = ${productId}) AND (cart_id = ${cart_id})`;
+    check = await db.any(check); 
+    console.log('check cart:');
+    console.log(check[0]); 
+
+    let add = `insert into items(cart_id, product_id, amount) values (${cart_id}, ${productId}, ${amount}) returning *;`; 
+    let results = await db.any(add); 
+    console.log('where..');
+    console.log(results); 
+
+    //checking results
+    check = `select product_id from items where (product_id = ${productId}) AND (cart_id = ${cart_id})`;
+    check = await db.any(check); 
+    console.log('check cart 2:');
+    console.log(check[0]);  
+  }
+
+
 });
 
-  //var addproduct = `insert into cart(userid, productid) values (${usrId}, ${$productId});`;
-
-});
-
-app.delete('/delete', (req,res) => {
+app.delete('/delete', async (req,res) => {
 
   let usrId = req.session.user_id;
   let name= req.body.title;
   name = name.trim();
+  //let amount = req.body.amount; 
   
-  let del = `delete from cart where productid = "${productId}" AND userid = "${usrId}";`
+  let find = `select product_id from products where name = ${name};`;
+  let productId = await db.any(find); 
+  productId = productId[0].product_id; 
+  console.log(productId); 
 
-  let findname = `select product_id from products where name = '${name}';`;
 
-  db.any(findname)
-  .then(data => {
-    //console.log('deleted successfully!');
-    //res.render("pages/checkout.ejs");
-    let prod_id = data[0][0].product_id;
-    console.log('heres id'+ prod_id);
+  let findId = `select cart_id from cart where user_id = ${usrId};`;
+  let cartId = await db.any(findId); 
+  cartId = cartId[0].cart_id;
+  console.log(cartId); 
 
-    let del = `delete from cart where productid = "${prod_id}" AND userid = "${usrId}" returning *;`
 
-    db.any(del)
-    .then (data2 => {
-      console.log(data2); 
+  let findAmt = `select amount from items where (product_id = ${productId}) AND (cart_id = ${cartId});`;
+  let amount1 = await db.any(findAmt); 
+  amount1 = amount1[0].amount; 
+  console.log(amount1); 
 
-    })
-    .catch (err =>{
-      return console.log(err);
-    });
+  let del = `delete from items where productid = "${productId};" AND userid = "${usrId}";`;
+  let results = await db.any(del);   
+  console.log(results);  
 
-  })
-  .catch(err => {
-    // throw error
-  });
+  //delete entire row
+  if(Number(amount1) > Number(amount))
+  {
+    //delete and reinsert with new amount values
+    amount = Number(amount1) - Number(amount); 
+    let insert = `insert into items(cart_id, product_id, amount) values (${usrId}, ${productId}, ${amount}) returning *;`;
+  }
+
 
 });
 
-app.get('/cart', (req,res) => {
+app.get('/cart', async(req,res) => {
 
-
+  let count = getCount(req.session.user_id);
+  console.log('getCount happens');
 
   let usrId = req.session.user_id;
 
-  //let prodId = `select product_id from carts where user_id = ${usrId};`;//this can be multiple products...
-  let prodId = `select name from products where product_id = (select product_id from carts where user_id = ${usrId});`;
+  let findcart = `select cart_id from cart where user_id = ${usrId};`;
+  let cart_id = await db.any(findcart); 
+  cart_id = cart_id[0].cart_id; 
 
-  res.render("pages/checkout.ejs");
+
+  let grab = `select product_id from items where (cart_id = ${cart_id});`;
+  let product_id = await db.any(grab);
+  console.log(product_id);   
+
+  let getamt = '';
+  let amount = '';
+
+  let amounts = [];  
+
+  let findname = '';
+  let names = [];
+  let name = '';
+
+  let findprice = '';
+  let prices = [];
+  let price = '';
+
+
   
-  /*db.any(find)
+  //amounts[i] = amount[i].amount; 
+  
+  
+  for(let i = 0; i < product_id.length; i++)
+  {
+    console.log(i);
+    getamt = `select amount from items where (product_id = ${product_id[i].product_id}) AND (cart_id = ${cart_id});`;
+    amount = await db.any(getamt); 
+    console.log(amount);
+    amounts[i] = amount[0].amount; 
+
+    findname = `select name from products where (product_id = ${product_id[i].product_id});`;
+    name = await db.any(findname); 
+    names[i] = name[0].name; 
+
+    findprice = `select price from products where (product_id = ${product_id[i].product_id});`;
+    price = await db.any(findprice); 
+    prices[i] = price[0].price; 
+    //amounts[i] = amount; 
+    //console.log(amounts[i]);
+    //amounts[i] = amount[i].amount; 
+    
+  }
+  console.log("amounts ");
+  console.log(amounts[0]);
+  console.log(amounts[1]);
+  console.log(names[0]);
+  console.log(names[1]);
+  console.log(prices[0]);
+  console.log(prices[1]);
+
+  //check if logged in
+  let value = true;      
+  if(req.session.user_id == undefined)
+  {
+    console.log('enter');
+    value = false;
+  }
+  
+  res.render("pages/checkout.ejs",{
+    amounts: amounts,
+    prices: prices,
+    names: names,
+    logged: value,
+    count: count, 
+    });
+
+  //let findamt = `select amount from items where (user_id = ${usrId}) AND (cart_id = ${cart_id}) AND (product_id = ${});`; 
+  
+//https://stackoverflow.com/questions/5957091/how-to-store-information-in-a-field-in-database
+  /*db.any(prodId)
   .then (data =>
     {
+      //all products of user id
       console.log(data);
-      //how do i do a request for every product... pain
-      //maybe redirect it to diferent endpt
+      console.log(data[0].product_id);
+
+       for(let i = 0; i < data.length; i++)
+      {
+        let query = `select name from products inner join cart on cart.product_id = products.product_id where cart.product_id = ${data[i].product_id};`;
+
+        console.log(data[i].product_id);
+
+        db.any(query)
+        .then (data2 =>
+          {
+          console.log(data2);
+          })
+          .catch (err => {
+            console.log(err);
+          });
+          console.log('end');
+      }
+      
+      
     })
     .catch (err => {
       console.log(err); 
@@ -271,15 +418,23 @@ app.get('/cart', (req,res) => {
 });
 
 
+
+
 app.get('/register', (req, res) => {
+  let count = getCount(req.session.user_id);
+  console.log('getCount happens');
   if(req.query.error){
   res.render("pages/register.ejs",{
   message: 'Your username or password could not be found. Please register for a new account.',
   error: true, 
+  count: count, 
   });
   } else 
   {
-    res.render("pages/register.ejs");
+    res.render("pages/register.ejs",
+    {
+      count: count, 
+    });
   }
 });
 
@@ -298,9 +453,9 @@ app.post('/register', async (req, res) => {
   
   //const password = req.body.password;
   
-  const query = `INSERT INTO users (username, password) VALUES ('${username}', '${hash}') returning *;`; 
+  const insert_user = `INSERT INTO users (username, password) VALUES ('${username}', '${hash}') returning *;`; 
 
-  db.any(query)
+  db.any(insert_user)
   
         .then(data => {
             console.log('DATA:', data);
@@ -320,8 +475,11 @@ app.post('/register', async (req, res) => {
 });
 
 //load product page
-app.get('/', (req,res) => {
+app.get('/', async (req,res) => {
  
+  let count = getCount(req.session.user_id);
+  console.log('getCount happens'); 
+
   axios({
     url: `https://fakestoreapi.com/products/categories`,
     method: 'GET',
@@ -341,12 +499,23 @@ app.get('/', (req,res) => {
       let mens = results.data[2].charAt(0).toUpperCase() + results.data[2].slice(1);
       let womens = results.data[3].charAt(0).toUpperCase() + results.data[3].slice(1);
 
+      let value = true;
+
+      
+      if(req.session.user_id == undefined)
+      {
+        console.log('enter');
+        value = false;
+      } 
+
       res.render("pages/home.ejs",
       {
         first: elec,
         second: jewel,
         third: mens,
         fourth: womens,
+        logged: value,
+        count: count, 
       });
 
     })
@@ -354,7 +523,6 @@ app.get('/', (req,res) => {
         {
           console.log(error);
         });
-
 
 
 });
@@ -382,6 +550,16 @@ async function storeDataInDatabase(data, category) {
 }
 
 app.get('/electronics', (req,res) => {
+
+  let count = getCount(req.session.user_id);
+  console.log('getCount happens');
+      //check if logged in
+      let value = true;      
+      if(req.session.user_id == undefined)
+      {
+        console.log('enter');
+        value = false;
+      }
   
   axios({
     url: `https://fakestoreapi.com/products/category/electronics`,
@@ -401,6 +579,8 @@ app.get('/electronics', (req,res) => {
        {
         output: results.data,
          error: false,
+         logged: value,
+         count: count, 
        });
 
     })
@@ -411,6 +591,8 @@ app.get('/electronics', (req,res) => {
           res.render("pages/category.ejs",
           {
            error:true,
+           logged: value,
+           count: count, 
           });
 
         });
@@ -421,6 +603,17 @@ app.get('/electronics', (req,res) => {
 
 app.get('/jewelery', (req,res) => {
   
+  let count = getCount(req.session.user_id);
+  console.log('getCount happens');
+
+  //check if logged in
+  let value = true;      
+  if(req.session.user_id == undefined)
+  {
+    console.log('enter');
+    value = false;
+  }
+
   axios({
     url: `https://fakestoreapi.com/products/category/jewelery`,
     method: 'GET',
@@ -439,6 +632,8 @@ app.get('/jewelery', (req,res) => {
        {
         output: results.data,
          error: false,
+         logged: value,
+         count: count, 
        });
 
     })
@@ -449,6 +644,8 @@ app.get('/jewelery', (req,res) => {
           res.render("pages/category.ejs",
           {
            error:true,
+           logged: value,
+           count: count, 
           });
 
         });
@@ -459,6 +656,17 @@ app.get('/jewelery', (req,res) => {
 
 app.get('/mens', (req,res) => {
   
+  let count = getCount(req.session.user_id);
+  console.log('getCount happens');
+
+  //check if logged in
+  let value = true;      
+  if(req.session.user_id == undefined)
+  {
+    console.log('enter');
+    value = false;
+  }
+
   axios({
     url: `https://fakestoreapi.com/products/category/men's clothing`,
     method: 'GET',
@@ -477,6 +685,8 @@ app.get('/mens', (req,res) => {
        {
         output: results.data,
          error: false,
+         logged: value,
+         count: count,
        });
 
     })
@@ -487,6 +697,8 @@ app.get('/mens', (req,res) => {
           res.render("pages/category.ejs",
           {
            error:true,
+           logged: value,
+           count: count, 
           });
 
         });
@@ -496,6 +708,17 @@ app.get('/mens', (req,res) => {
 });
 
 app.get('/womens', (req,res) => {
+
+  let count = getCount(req.session.user_id);
+  console.log('getCount happens');
+
+  //check if logged in
+  let value = true;      
+  if(req.session.user_id == undefined)
+  {
+    console.log('enter');
+    value = false;
+  }
   
   axios({
     url: `https://fakestoreapi.com/products/category/women's clothing`,
@@ -515,6 +738,8 @@ app.get('/womens', (req,res) => {
        {
         output: results.data,
          error: false,
+         logged: value,
+         count: count, 
        });
 
     })
@@ -525,6 +750,8 @@ app.get('/womens', (req,res) => {
           res.render("pages/category.ejs",
           {
            error:true,
+           logged: value,
+           count: count, 
           });
 
         });
