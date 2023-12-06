@@ -372,7 +372,6 @@ async function storeDataInDatabase(data, category) {
         product.price,
         product.rating.rate,
         product.id,
-        category,
       ]);
     }
 
