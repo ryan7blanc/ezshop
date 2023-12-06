@@ -21,7 +21,7 @@
                     <h3 class="ellipsis" id='ti_<%= i%>'>Purchase <%= output[i].title %></h3>
                     <input name="image" value="<%= output[i].image %>" class="invisible">
                     <img src="<%= output[i].image%>" >
-                    <div style="display: flex; justify-content: space-around;">
+                    <div style="display: flex; justify-content: space-evenly; padding-bottom: 1em;">
                         <input name="price" value="<%= output[i].price %>" class="invisible">
                         <!--<input type="submit" value="Buy now">-->
                        
@@ -32,11 +32,25 @@
                                 
                             </div>
                         </div>
-
+                            <p>$<%= output[i].price %></p>
+                            <select name="amount">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        
+                        
+                    </div>
+                    <div style="display: flex; justify-content: space-around;">
                         <input type="button" value="Buy now" href="/cart" >
                         <input type="submit" value="Add to cart" onclick="addCart('add')">
-                        <p>$<%= output[i].price %></p>
-                        
                     </div>
                 </form>
             </div>
