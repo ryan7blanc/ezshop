@@ -380,7 +380,9 @@ app.get('/cart', async(req,res) => {
 
     img = `select image_url from items where (cart_id = ${cart_id}) and (product_id = ${product_id[i].product_id});`;
     img_url = await db.any(img);
-    console.log('image: ' + img_url); 
+    console.log("image:");
+    console.log(img_url); 
+    console.log(img_url[0].img_url);
     //imgs[i] = img_url[0].image_url; 
 
     //amounts[i] = amount; 
@@ -562,15 +564,14 @@ async function storeDataInDatabase(data, category) {
   try {
     for (const product of data) {
       const insertQuery = `
-        INSERT INTO products (name, description, price, review, product_id)
-        VALUES ($1, $2, $3, $4, $5);`;
+        INSERT INTO products (name, description, price, review)
+        VALUES ($1, $2, $3, $4);`;
 
       await db.none(insertQuery, [
         product.title,
         product.description,
         product.price,
         product.rating.rate,
-        product.id,
       ]);
     }
 
@@ -592,7 +593,7 @@ app.get('/electronics', async (req,res) => {
         value = false;
       }
   
-  axios({
+  axios ({
     url: `https://fakestoreapi.com/products/category/electronics`,
     method: 'GET',
     dataType: 'json',
