@@ -1,6 +1,42 @@
 <%- include ('../partials/header') %>
 
-<!-- start body -->
+    <!-- start body -->
+
+    <style>
+        /* CSS Internal Styles */
+        form {
+            text-align: left;
+            padding: 10px;
+
+            ::placeholder {
+                font: 1em sans-serif;
+            }
+        }
+
+        button {
+            background-color: white;
+            color: black;
+            border: 2px solid #5b9b9b;
+            border-radius: 7px;
+            font-size: small;
+            padding: 5px 10px;
+            transition-duration: 0.4s;
+        }
+
+        button:hover {
+            background-color: #5b9b9b;
+            color: white;
+        }
+
+        p {
+            font-size: small;
+        }
+
+        label {
+            font-size: small;
+        }
+    </style>
+
 
 <div class="container" style="padding: 20px; display: flex; justify-content: space-around;">
     
@@ -40,142 +76,64 @@
         
         <% } %>
         </div>
-
-    <div class="container" style="padding: 20px;">
-        <div class="row" style="padding: 10px;"> <!-- First & Last -->
-            <div class="col">
-                <div class="form-floating">
-                    <input type="text" class="form-control" placeholder="First name" aria-label="First name">
-                    <label for="floatingInput">First Name</label>
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-floating">
-                    <input type="text" class="form-control" placeholder="Last name" aria-label="Last name">
-                    <label for="floatingInput">Last Name</label>
-                </div>
-            </div>
-        </div>
-        <div class="row" style="padding: 10px;"> <!-- Email & Phone Number -->
-            <div class="col">
-                <div class="form-floating">
-                    <input type="email" class="form-control" placeholder="name@example.com">
-                    <label for="floatingInput">Email Address</label>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="form-floating">
-                    <input type="text" class="form-control" placeholder="Phone Number" aria-label="Phone Number">
-                    <label for="floatingInput">Phone Number</label>
-                </div>
-            </div>
-        </div>
-        <div class="row" style="padding: 10px;"> <!-- Address -->
-            <div class="col">
-                <div class="form-floating">
-                    <input type="text" class="form-control" placeholder="Street Address" aria-label="Street Address">
-                    <label for="floatingInput">Street Address</label>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="form-floating">
-                    <input type="text" class="form-control" placeholder="Apt, Suite, Unit, Building (Optional)"
-                        aria-label="Apt, Suite, Unit, Building (Optional)">
-                    <label for="floatingInput">Apt, Suite, Unit, Building (Optional)</label>
-                </div>
-            </div>
-            <div class="col-2">
-                <div class="form-floating">
-                    <input type="text" class="form-control" placeholder="City" aria-label="City">
-                    <label for="floatingInput">City</label>
-                </div>
-            </div>
-            <div class="col-2">
-                <div class="form-floating">
-                    <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                        <option selected>-</option>
-                        <option value="1">CO</option>
-                        <option value="2">AZ</option>
-                        <option value="3">TX</option>
-                    </select>
-                    <label for="floatingSelect">State</label>
-                </div>
-            </div>
-        </div>
-        <div class="row" style="padding: 10px;"> <!-- Credit Card Info -->
-            <div class="col">
-                <div class="form-floating">
-                    <input type="text" class="form-control" placeholder="Credit/Debit Card Number"
-                        aria-label="Credit/Debit Card Number">
-                    <label for="floatingInput">Credit/Debit Card Number</label>
-                </div>
-            </div>
-            <div class="col-2">
-                <div class="form-floating">
-                    <input type="text" class="form-control" placeholder="Expiration MM/YY"
-                        aria-label="Expiration MM/YY">
-                    <label for="floatingInput">Expiration MM/YY</label>
-                </div>
-            </div>
-            <div class="col-2">
-                <div class="form-floating">
-                    <input type="text" class="form-control" placeholder="CVV Number" aria-label="CVV Number">
-                    <label for="floatingInput">CVV Number</label>
-                </div>
-            </div>
-        </div>
-        <div class="row" style="padding: 20px;"> <!-- billing address question-->
-            <div class="col">
-                <h5>Is your billing address the same as your shipping address?</h5>
-            </div>
-            <div class="col-6">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault1" id="flexRadioDefault1"
-                        checked>
-                    <label class="form-check-label" for="flexRadioDefault1">
-                        Yes
-                    </label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault1" id="flexRadioDefault2">
-                    <label class="form-check-label" for="flexRadioDefault2">
-                        No
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="row" style="padding: 20px;"> <!-- text question-->
-            <div class="col">
-                <h5>Do you want to recieve text updates about your order?</h5>
-            </div>
-            <div class="col-6">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault3"
-                        checked>
-                    <label class="form-check-label" for="flexRadioDefault3">
-                        Yes
-                    </label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault4">
-                    <label class="form-check-label" for="flexRadioDefault4">
-                        No
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <div class="containter" style="padding: 20px;">
-            <div style="text-align: right;">
-                <a class="btn btn-info" role="button">Place Order</a>
-            </div>
+   
+    <div class="container" style="padding: 10px; padding-top: 20px;">
+        <div style="font-size: small; text-align: justify; padding-left: 20px;">
+            <h2>You have These items in your cart:</h2><br>
+            <% for(let i=0; i < amounts.length; i++){%>
+                <%= names[i]%>
+                    <%= amounts[i]%> @
+                        $<%= prices[i]%>
+                            <% } %>
         </div>
     </div>
 
+    <div class="container" style="padding: 20px;"> <!-- Form -->
+        <form>
+            <h5>Fill out the information below for EZcheckout:</h5>
+            <div class="col" style="padding: 10px;"> <!-- First & Last name-->
+                <input type="text" id="fname" name="fname" placeholder="First name">
+                <input type="text" id="lname" name="lname" placeholder="Last Name">
+            </div>
+            <div class="col" style="padding: 10px;"> <!-- Email address & Phone number-->
+                <input type="text" id="eAddress" name="eAddress" placeholder="Email Address">
+                <input type="text" id="pNumber" name="pNumber" placeholder="Phone Number">
+            </div>
+            <div class="col" style="padding: 10px;"> <!-- Address-->
+                <input type="text" id="sAddress" name="sAddress" placeholder="Street Address">
+                <input type="text" id="Apt" name="Apt" placeholder="Apt, Suite, Unit (Optional)">
+                <label for="states">State</label>
+                <select name="states" id="states">
+                    <option value="Colorado">CO</option>
+                    <option value="Texas">TX</option>
+                    <option value="California">CA</option>
+                </select>
+            </div>
+            <div class="col" style="padding: 10px;"> <!-- Payment-->
+                <input type="text" id="cNumber" name="cNumber" placeholder="Credit/Debit Card Number">
+                <input type="text" id="expiration" name="expiration" placeholder="Expiration MM/YY">
+                <input type="text" id="cvvNumber" name="cvvNumber" placeholder="CVV Number">
+            </div>
+            <div class="col" style="padding: 10px;"> <!-- Billing address question & Text updates question-->
+                <p>Is your billing address the same as your shipping address?</p>
+                <input type="radio" id="yes" name="bAddressQ" value="Yes">
+                <label for="yes">Yes</label>
+                <input type="radio" id="no" name="bAddressQ" value="No">
+                <label for="no">No</label><br>
 
+                <p>Do you want to recieve text updates about your order?</p>
+                <input type="radio" id="yes" name="tAddressQ" value="Yes">
+                <label for="yes">Yes</label>
+                <input type="radio" id="no" name="tAddressQ" value="No">
+                <label for="no">No</label><br>
+            </div>
+        </form>
+
+        <div class="col" style="padding: 10px;">
+            <button type="button" class="button">Place Order</button> <!-- Place order button-->
+        </div>
     </div>
 
-</div>
-<!-- end body -->
+    <!-- end body -->
 
-<%- include ('../partials/footer') %>
+    <%- include ('../partials/footer') %>
