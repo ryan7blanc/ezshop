@@ -561,24 +561,43 @@ app.get('/', async (req,res) => {
 });
 
 async function storeDataInDatabase(data, category) {
+
+  //writing sql query 
+  
+
   try {
     for (const product of data) {
-      const insertQuery = `
-        INSERT INTO products (name, description, price, review)
-        VALUES ($1, $2, $3, $4);`;
 
-      await db.none(insertQuery, [
-        product.title,
-        product.description,
-        product.price,
-        product.rating.rate,
-      ]);
+      let query = `select name from products where name = $1;`;
+      let q_name = await db.any(query);
+      q_name = q_name[0].name;
+      console.log('name: ')
+      console.log(q_name);
+      if(q_name == ''){
+        //not in the DB
+        const insertQuery = `
+          INSERT INTO products (name, description, price, review, image_url)
+          VALUES ($1, $2, $3, $4, $5);`;
+
+        await db.none(insertQuery, [
+          product.title,
+          product.description,
+          product.price,
+          product.rating.rate,
+          product.image_url
+        ]);
+      } else
+      {
+        console.log('product in database')
+        return; 
+      }
     }
-
-    console.log(`Data for category '${category}' successfully stored in the database`);
-  } catch (error) {
-    console.error(`Error storing data for category '${category}':`, error.message || error);
-  }
+      console.log(`Data for category '${category}' successfully stored in the database`);
+    } catch (error) {
+      console.error(`Error storing data for category '${category}':`, error.message || error);
+    }
+  
+  
 }
 
 app.get('/electronics', async (req,res) => {
