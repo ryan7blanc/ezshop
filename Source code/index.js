@@ -196,10 +196,15 @@ app.post('/addcart', async (req,res) => {
   let name= req.body.image;
   let amount = req.body.amount; 
   
-
-  if(usrId == '' || usrId == undefined || usrId == null)
+  
+  if(typeof usrId == 'undefined')
   {
-    res.redirect("/register"); 
+    console.log('the breaker');
+    res.render("pages/register.ejs",
+    {
+      message: 'Please signup for an account to begin shopping.', 
+    }); 
+    return;
   }
 
   console.log('heres the id!!');
@@ -925,7 +930,7 @@ app.post('/display', upload.none(), async (req, res) => {
 
 app.get("/logout", (req, res) => {
   req.session.destroy();
-  res.render("pages/login",
+  res.render("pages/login.ejs",
   {
     message: "You have logged out successfully.", 
   }

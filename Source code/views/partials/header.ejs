@@ -32,7 +32,7 @@
         <!-- added register button -->
         <% if (locals.logged){ %>
           <div class="sign-in">
-            <a href="login"> <p>log out</p>
+            <a href="/logout"> <p>logout</p>
            </div>
           <% } %>
           <% if (!locals.logged){%>
@@ -49,7 +49,9 @@
                 <%}%>
             <span class="material-symbols-outlined cart-icon">shopping_cart</span>
             
+            <%if(locals.logged){%>
             <div id="product-count"><%=count%> </div>
+            <%}%>
           </a>
         </div>
       </nav>
