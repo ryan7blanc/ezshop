@@ -5,10 +5,11 @@
        
 
         <body>
-        <div class="col"><%- include ('../partials/alert.ejs') %></div>
+        <div class="col"></div>
         <div id="login-pg" class="card">
             <form action="login" method="POST" >
-                <h1>Login</h1>
+                <h1 id="log_reg">Login</h1>
+                <%- include ('../partials/alert.ejs') %>
                   <label for="username">Username:</label>
                   <input type="username" id="username" name="username"/>
           

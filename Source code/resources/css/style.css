@@ -270,3 +270,9 @@ form
   text-align: center; 
   
 }
+
+/*login & register*/
+#log_reg
+{
+  padding-bottom: 1em; 
+}

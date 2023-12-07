@@ -46,6 +46,11 @@
         <!--show each product in cart-->
         <!--add images to db..... ughhhh-->
         <h1>Cart</h1>
+
+        <%if(amounts.length == 0){%>
+            <div style="padding-top: 2em;">Your cart is empty.</div>
+        <%}%>
+
         <% for(let i = 0; i < amounts.length; i++){%>
 
         <form method="POST" action="/delete">
@@ -57,7 +62,7 @@
             <%= amounts[i]%>
             $<%= prices[i]%>
             <img src="<%= images[i]%>" width="50" height="50" />
-            <select name="amount">
+            <select name="amount" value="<%=amounts[i]%>">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -77,16 +82,14 @@
         <% } %>
         </div>
    
+        <!--
     <div class="container" style="padding: 10px; padding-top: 20px;">
         <div style="font-size: small; text-align: justify; padding-left: 20px;">
             <h2>You have These items in your cart:</h2><br>
-            <% for(let i=0; i < amounts.length; i++){%>
-                <%= names[i]%>
-                    <%= amounts[i]%> @
-                        $<%= prices[i]%>
-                            <% } %>
+            
         </div>
     </div>
+    -->
 
     <div class="container" style="padding: 20px;"> <!-- Form -->
         <form>
@@ -133,6 +136,8 @@
             <button type="button" class="button">Place Order</button> <!-- Place order button-->
         </div>
     </div>
+
+</div>
 
     <!-- end body -->
 

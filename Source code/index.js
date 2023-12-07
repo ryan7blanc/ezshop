@@ -174,7 +174,7 @@ app.get('/welcome', (req, res) => {
         else
         {  //alerts user that they entered the wrong password or username
            res.render("pages/login.ejs",{
-            message: 'Incorrect username or password.',
+            message: 'Incorrect username or password. Please try again.',
             error: true, 
             count: count, 
           });
@@ -183,8 +183,11 @@ app.get('/welcome', (req, res) => {
     } catch (error) {
       //res.json({message: 'Invalid input'});
       //res = return
-      res.redirect('/login');
-      
+      res.render("pages/login.ejs",{
+        message: 'Incorrect username or password. Please try again.',
+        error: true, 
+        count: count, 
+      });
     }
       
   });
@@ -195,11 +198,15 @@ app.post('/addcart', async (req,res) => {
   let usrId = req.session.user_id;
   let name= req.body.image;
   let amount = req.body.amount; 
+  let buy = req.body.buy; 
   
-  
+  console.log('buy:');
+  console.log(buy);
+
+
   if(typeof usrId == 'undefined')
   {
-    console.log('the breaker');
+    //console.log('the breaker');
     res.render("pages/register.ejs",
     {
       message: 'Please signup for an account to begin shopping.', 
@@ -293,6 +300,12 @@ app.post('/addcart', async (req,res) => {
     console.log(check[0]);  
   }
 
+  if(buy == 'Buy now'){
+    //buy now
+  res.redirect('/cart');
+  return; 
+  }
+  //add to cart
   res.redirect('back');
 
 });
@@ -532,7 +545,10 @@ app.post('/register', async (req, res) => {
             // throw error
             //console.log(err);
             //console.log(res.status); 
-            res.redirect('/register');
+            res.render('pages/register.ejs',
+            {
+              message: 'Please enter at least 8 characters for your password or enter a valid username.',
+            });
             
         });
 });
