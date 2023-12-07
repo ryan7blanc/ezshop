@@ -1,5 +1,5 @@
 # ezshop
-# Dependencies: Multer https://www.npmjs.com/package/multer,  npm install --save multer
+# Dependencies: Multer https://www.npmjs.com/package/multer, installing using: npm install --save multer
 
 CSCI 3308 Group 15-03 Project: EZ Shop
 
