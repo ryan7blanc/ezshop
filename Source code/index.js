@@ -567,32 +567,42 @@ async function storeDataInDatabase(data, category) {
 
   try {
     for (const product of data) {
-
-      let query = `select name from products where name = $1;`;
+      console.log('wughhg');
+ 
+      let query = `select image_url from products where image_url = '${product.image}';`;
+      console.log(query);
       let q_name = await db.any(query);
-      q_name = q_name[0].name;
-      console.log('name: ')
+      //q_name = q_name[0].name;
       console.log(q_name);
-      if(q_name == ''){
+      
+      console.log('the length: ');
+      console.log(q_name.length); 
+      //console.log(q_name);
+      if(q_name.length == 0){
         //not in the DB
+        console.log('enter');
         const insertQuery = `
           INSERT INTO products (name, description, price, review, image_url)
           VALUES ($1, $2, $3, $4, $5);`;
+        
+          
 
         await db.none(insertQuery, [
           product.title,
           product.description,
           product.price,
           product.rating.rate,
-          product.image_url
+          product.image,
         ]);
+        
+        console.log(`Data for category '${category}' successfully stored in the database`);
       } else
       {
         console.log('product in database')
-        return; 
+        
       }
     }
-      console.log(`Data for category '${category}' successfully stored in the database`);
+
     } catch (error) {
       console.error(`Error storing data for category '${category}':`, error.message || error);
     }
@@ -675,6 +685,7 @@ app.get('/jewelery', async (req,res) => {
     
   })
     .then(results => {
+      console.log(results.data);
       console.log(results.data.length);
       
       storeDataInDatabase(results.data, "jewelery");

@@ -7,8 +7,8 @@ CREATE TABLE users(
 
 DROP TABLE IF EXISTS products CASCADE;
 CREATE TABLE products(
-    name VARCHAR(50) NOT NULL,
-    description VARCHAR(200) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(1000) NOT NULL,
     price INT NOT NULL,
     review INT NOT NULL,
     product_id SERIAL PRIMARY KEY NOT NULL,
