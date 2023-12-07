@@ -2,18 +2,6 @@
 
     <!-- start body -->
 
-    <div style="padding-top: 2em; flex: display; flex-direction: column;"> <!--show each product in cart-->
-        <!--add images to db..... ughhhh-->
-        <% for(let i=0; i < amounts.length; i++){%>
-            <div style="display: flex; border: solid;">
-                <%= names[i]%>
-                    <%= amounts[i]%>
-                        $<%= prices[i]%>
-
-            </div>
-            <% } %>
-    </div>
-
     <style>
         /* CSS Internal Styles */
         form {
@@ -49,8 +37,20 @@
         }
     </style>
 
+    <div class="container" style="padding: 10px; padding-top: 20px;">
+        <div style="font-size: small; text-align: justify; padding-left: 20px;">
+            <h2>You have These items in your cart:</h2><br>
+            <% for(let i=0; i < amounts.length; i++){%>
+                <%= names[i]%>
+                    <%= amounts[i]%> @
+                        $<%= prices[i]%>
+                            <% } %>
+        </div>
+    </div>
+
     <div class="container" style="padding: 20px;"> <!-- Form -->
         <form>
+            <h5>Fill out the information below for EZcheckout:</h5>
             <div class="col" style="padding: 10px;"> <!-- First & Last name-->
                 <input type="text" id="fname" name="fname" placeholder="First name">
                 <input type="text" id="lname" name="lname" placeholder="Last Name">
@@ -62,7 +62,7 @@
             <div class="col" style="padding: 10px;"> <!-- Address-->
                 <input type="text" id="sAddress" name="sAddress" placeholder="Street Address">
                 <input type="text" id="Apt" name="Apt" placeholder="Apt, Suite, Unit (Optional)">
-                <label for="states">City</label>
+                <label for="states">State</label>
                 <select name="states" id="states">
                     <option value="Colorado">CO</option>
                     <option value="Texas">TX</option>
@@ -87,10 +87,11 @@
                 <input type="radio" id="no" name="tAddressQ" value="No">
                 <label for="no">No</label><br>
             </div>
-
-            <button type="button" class="button">Place Order</button> <!-- Place order button-->
-
         </form>
+
+        <div class="col" style="padding: 10px;">
+            <button type="button" class="button">Place Order</button> <!-- Place order button-->
+        </div>
     </div>
 
     <!-- end body -->
