@@ -2,21 +2,41 @@
 
 <!-- start body -->
 
-<div class="container" style="padding: 20px;">
+<div class="container" style="padding: 20px; display: flex; justify-content: space-around;">
     
     
 
-        <div style="padding-top: 2em; flex: display; flex-direction: column;">
+        <div style="flex: display; flex-direction: column;">
         <!--show each product in cart-->
         <!--add images to db..... ughhhh-->
+        <h1>Cart</h1>
         <% for(let i = 0; i < amounts.length; i++){%>
-            <div style="display: flex; border: solid;">
+
+        <form method="POST" action="/delete">
+            <input name="title" value="<%= names[i] %>" class="invisible">
+            <input name="image" value="<%= images[i] %>" class="invisible">
+            
+            <div class="shop-link" style="display: flex; border: solid;">
             <%= names[i]%>
             <%= amounts[i]%>
             $<%= prices[i]%>
-            
+            <img src="<%= images[i]%>" width="50" height="50" />
+            <select name="amount">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+            <input type="submit" value="Delete from cart">
             </div>
-
+        </form>
+            
         
         <% } %>
         </div>
