@@ -111,7 +111,8 @@ app.get('/welcome', (req, res) => {
  
 
   app.get('/login', async (req,res) => {
-    let count = await asyncFunctionsgetCount(req.session.user_id);
+    //let count = await asyncFunctionsgetCount(req.session.user_id);
+    let count;
     console.log('getCount happens');
     res.render('pages/login.ejs',
     {
