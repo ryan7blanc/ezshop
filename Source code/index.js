@@ -562,8 +562,8 @@ async function storeDataInDatabase(data, category) {
   try {
     for (const product of data) {
       const insertQuery = `
-        INSERT INTO products (name, description, price, review, product_id, category)
-        VALUES ($1, $2, $3, $4, $5, $6);`;
+        INSERT INTO products (name, description, price, review, product_id)
+        VALUES ($1, $2, $3, $4, $5);`;
 
       await db.none(insertQuery, [
         product.title,

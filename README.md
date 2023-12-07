@@ -1,9 +1,14 @@
 # ezshop
+# Dependencies: Multer https://www.npmjs.com/package/multer,  npm install --save multer
+
 CSCI 3308 Group 15-03 Project: EZ Shop
 
 Team Name: Team EZ Shop
 
 Team Number: 03
+
+
+
 
 Anna Soukhovei @annasouk anna.soukhovei@colorado.edu
 
