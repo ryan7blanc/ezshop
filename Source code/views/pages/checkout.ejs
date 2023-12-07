@@ -6,14 +6,15 @@
 
     
 
-        <div style="padding-top: 2em;">
+        <div style="padding-top: 2em; flex: display; flex-direction: column;">
         <!--show each product in cart-->
         <!--add images to db..... ughhhh-->
         <% for(let i = 0; i < amounts.length; i++){%>
             <div style="display: flex; border: solid;">
             <%= names[i]%>
             <%= amounts[i]%>
-            <%= prices[i]%>
+            $<%= prices[i]%>
+            
             </div>
 
         
