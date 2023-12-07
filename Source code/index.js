@@ -193,8 +193,9 @@ app.get('/welcome', (req, res) => {
 app.post('/addcart', async (req,res) => {
 
   let usrId = req.session.user_id;
-  let name= req.body.title;
+  let name= req.body.image;
   let amount = req.body.amount; 
+  
 
   if(usrId == '' || usrId == undefined || usrId == null)
   {
@@ -211,9 +212,16 @@ app.post('/addcart', async (req,res) => {
   //find product ID
   console.log('start');
   console.log(amount);
-  let findname = `select product_id from products where name = '${name}';`;
+  /*let findname = `select product_id from products where name = '${name}';`;
+  let productId= await db.any(findname); 
+  productId = productId[0].product_id;*/
+
+  //name is actually img url 
+  let findname = `select product_id from products where image_url = '${name}';`;
   let productId= await db.any(findname); 
   productId = productId[0].product_id;
+  console.log("found Id: " + productId); 
+
   //console.log(productId[0].product_id);
   let findcart = `select cart_id from cart where user_id = ${usrId}`;
   let cart_id = await db.any(findcart); 
@@ -283,31 +291,35 @@ app.post('/addcart', async (req,res) => {
 
 });
 
-app.delete('/delete', async (req,res) => {
+app.post('/delete', async (req,res) => {
 
+  console.log('delete..');
   let usrId = req.session.user_id;
-  let name= req.body.title;
-  name = name.trim();
+  let image= req.body.image;
+  let amount = req.body.amount; 
+  //name = name.trim();
   //let amount = req.body.amount; 
+  console.log('amount: ' + amount);
+  console.log('image: ' + image);
   
-  let find = `select product_id from products where name = ${name};`;
+  let find = `select product_id from products where image_url = '${image}';`;
   let productId = await db.any(find); 
   productId = productId[0].product_id; 
-  console.log(productId); 
+  console.log('productId: '+ productId); 
 
 
   let findId = `select cart_id from cart where user_id = ${usrId};`;
   let cartId = await db.any(findId); 
   cartId = cartId[0].cart_id;
-  console.log(cartId); 
+  console.log('cartId: '+ cartId); 
 
 
   let findAmt = `select amount from items where (product_id = ${productId}) AND (cart_id = ${cartId});`;
   let amount1 = await db.any(findAmt); 
   amount1 = amount1[0].amount; 
-  console.log(amount1); 
+  console.log('amount; ' + amount1); 
 
-  let del = `delete from items where productid = "${productId};" AND userid = "${usrId}";`;
+  let del = `delete from items where (product_id = ${productId}) AND (cart_id = ${cartId}) returning *;`;
   let results = await db.any(del);   
   console.log(results);  
 
@@ -316,9 +328,12 @@ app.delete('/delete', async (req,res) => {
   {
     //delete and reinsert with new amount values
     amount = Number(amount1) - Number(amount); 
-    let insert = `insert into items(cart_id, product_id, amount) values (${usrId}, ${productId}, ${amount}) returning *;`;
+    let insert = `insert into items(cart_id, product_id, amount) values (${cartId}, ${productId}, ${amount}) returning *;`;
+    let output = await db.any(insert); 
+    console.log('origin amt greater' + output);
   }
 
+  res.redirect('/cart');
 
 });
 
@@ -384,7 +399,9 @@ app.get('/cart', async(req,res) => {
     img_url = await db.any(img);
     console.log("image:");
     console.log(img_url); 
-    console.log(img_url[0].img_url);
+    console.log(img_url[0].image_url);
+    imgs[i] = img_url[0].image_url;
+
     //imgs[i] = img_url[0].image_url; 
 
     //amounts[i] = amount; 
@@ -414,7 +431,7 @@ app.get('/cart', async(req,res) => {
     names: names,
     logged: value,
     count: count, 
-    
+    images: imgs,
     });
 
   //let findamt = `select amount from items where (user_id = ${usrId}) AND (cart_id = ${cart_id}) AND (product_id = ${});`; 
@@ -557,6 +574,7 @@ app.get('/', async (req,res) => {
       .catch(error =>
         {
           console.log(error);
+          res.render("pages/err.ejs"); 
         });
 
 
