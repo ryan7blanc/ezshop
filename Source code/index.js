@@ -111,7 +111,9 @@ app.get('/welcome', (req, res) => {
  
 
   app.get('/login', async (req,res) => {
+
     let count = await getCount(req.session.user_id);
+
     console.log('getCount happens');
     res.render('pages/login.ejs',
     {
