@@ -9,7 +9,7 @@ const upload = multer(); //need for multer
 const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
 const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
-const bcrypt = require('bcrypt'); //  To hash passwords
+const bcrypt = require('bcryptjs'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part B.
 
 //fixes css!! 
@@ -288,6 +288,7 @@ app.post('/addcart', async (req,res) => {
     console.log(check[0]);  
   }
 
+  res.redirect('back');
 
 });
 
@@ -319,6 +320,11 @@ app.post('/delete', async (req,res) => {
   amount1 = amount1[0].amount; 
   console.log('amount; ' + amount1); 
 
+  let find_img = `select image_url from items where (product_id = ${productId}) AND (cart_id = ${cartId});`;
+  let img = await db.any(find_img); 
+  img = img[0].image_url; 
+  //console.log('amount; ' + amount1); 
+
   let del = `delete from items where (product_id = ${productId}) AND (cart_id = ${cartId}) returning *;`;
   let results = await db.any(del);   
   console.log(results);  
@@ -328,7 +334,7 @@ app.post('/delete', async (req,res) => {
   {
     //delete and reinsert with new amount values
     amount = Number(amount1) - Number(amount); 
-    let insert = `insert into items(cart_id, product_id, amount) values (${cartId}, ${productId}, ${amount}) returning *;`;
+    let insert = `insert into items(cart_id, product_id, amount, image_url) values (${cartId}, ${productId}, ${amount}, '${img}') returning *;`;
     let output = await db.any(insert); 
     console.log('origin amt greater' + output);
   }
@@ -842,6 +848,62 @@ app.get('/womens', async (req,res) => {
 
 });
 
+app.get('/all', async (req,res) => {
+  
+  //get all products
+
+  let count = await getCount(req.session.user_id);
+  console.log('getCount happens');
+
+  //check if logged in
+  let value = true;      
+  if(req.session.user_id == undefined)
+  {
+    console.log('enter');
+    value = false;
+  }
+
+  axios({
+    url: `https://fakestoreapi.com/products`,
+    method: 'GET',
+    dataType: 'json',
+    headers: {
+      'Accept-Encoding': 'application/json',
+    },
+    
+  })
+    .then(results => {
+      console.log(results.data.length);
+      
+      storeDataInDatabase(results.data, "all");
+      
+      res.render("pages/category.ejs",
+       {
+        output: results.data,
+         error: false,
+         logged: value,
+         count: count,
+       });
+
+    })
+      .catch(error =>
+        {
+          console.log(error);
+
+          res.render("pages/category.ejs",
+          {
+           error:true,
+           logged: value,
+           count: count, 
+          });
+
+        });
+
+
+
+});
+
+
 
 app.post('/display', upload.none(), async (req, res) => {
 
@@ -860,5 +922,14 @@ app.post('/display', upload.none(), async (req, res) => {
 
 })
 
+
+app.get("/logout", (req, res) => {
+  req.session.destroy();
+  res.render("pages/login",
+  {
+    message: "You have logged out successfully.", 
+  }
+  );
+});
 
   module.exports = app.listen(3000);
