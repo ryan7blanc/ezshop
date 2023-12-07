@@ -86,7 +86,7 @@ app.get('/welcome', (req, res) => {
 
   async function getCount(usrId)
   {
-    /*if(usrId == undefined || usrId == '' || usrId == null)
+    if(usrId == undefined || usrId == '' || usrId == null)
   {
     console.log('undefined'); 
     return 0; 
@@ -104,15 +104,16 @@ app.get('/welcome', (req, res) => {
       return 0;
     } else {
     return count[0].sum; 
-    }*/
-    console.log('function'); 
+    }
+    //console.log('function'); 
   }
 
  
 
   app.get('/login', async (req,res) => {
-    //let count = await asyncFunctionsgetCount(req.session.user_id);
-    let count;
+
+    let count = await getCount(req.session.user_id);
+
     console.log('getCount happens');
     res.render('pages/login.ejs',
     {
@@ -123,7 +124,7 @@ app.get('/welcome', (req, res) => {
   app.post('/login', async (req,res) => {
     try {
 
-      let count = getCount(req.session.user_id);
+      let count = await getCount(req.session.user_id);
       console.log('getCount happens');
 
       const query = "select username, password, user_id from users where username = $1";
@@ -195,6 +196,11 @@ app.post('/addcart', async (req,res) => {
   let name= req.body.title;
   let amount = req.body.amount; 
 
+  if(usrId == '' || usrId == undefined || usrId == null)
+  {
+    res.redirect("/register"); 
+  }
+
   console.log('heres the id!!');
   console.log(usrId);
   console.log('heres the product title');
@@ -221,11 +227,20 @@ app.post('/addcart', async (req,res) => {
   
   console.log(check[0]); 
 
+  let img = `select image_url from products where (product_id = ${productId});`;
+    let img_url = await db.any(img); 
+    console.log('check image:');
+    console.log(img_url[0].image_url); 
+    img_url = img_url[0].image_url;
+
   if(check[0] == undefined)
   {
+
+
+
     //not in cart, add to items
     console.log("not in cart");
-    let add = `insert into items(cart_id, product_id, amount) values (${cart_id}, ${productId}, ${amount}) returning *;`; 
+    let add = `insert into items(cart_id, product_id, amount, image_url) values (${cart_id}, ${productId}, ${amount}, '${img_url}') returning *;`; 
     let results = await db.any(add);
     console.log(results); 
   } else
@@ -243,15 +258,17 @@ app.post('/addcart', async (req,res) => {
     //amount = amount1 + amount; 
     console.log(amount);
 
-    let deleteDupe = `delete from items where (product_id = ${productId}) AND (cart_id = ${cart_id})`;
+    let deleteDupe = `delete from items where (product_id = ${productId}) AND (cart_id = ${cart_id});`;
     await db.any(deleteDupe); 
 
-    check = `select product_id from items where (product_id = ${productId}) AND (cart_id = ${cart_id})`;
+    check = `select product_id from items where (product_id = ${productId}) AND (cart_id = ${cart_id});`;
     check = await db.any(check); 
     console.log('check cart:');
     console.log(check[0]); 
 
-    let add = `insert into items(cart_id, product_id, amount) values (${cart_id}, ${productId}, ${amount}) returning *;`; 
+    
+
+    let add = `insert into items(cart_id, product_id, amount, image_url) values (${cart_id}, ${productId}, ${amount}, '${img_url}') returning *;`; 
     let results = await db.any(add); 
     console.log('where..');
     console.log(results); 
@@ -307,7 +324,7 @@ app.delete('/delete', async (req,res) => {
 
 app.get('/cart', async(req,res) => {
 
-  let count = getCount(req.session.user_id);
+  let count = await getCount(req.session.user_id);
   console.log('getCount happens');
 
   let usrId = req.session.user_id;
@@ -321,6 +338,12 @@ app.get('/cart', async(req,res) => {
   let product_id = await db.any(grab);
   console.log(product_id);   
 
+ let img = '';
+  let img_url = '';
+  console.log(product_id);  
+  //img_url = img_url[0].image_url; 
+  let imgs = []; 
+
   let getamt = '';
   let amount = '';
 
@@ -333,6 +356,8 @@ app.get('/cart', async(req,res) => {
   let findprice = '';
   let prices = [];
   let price = '';
+
+ 
 
 
   
@@ -354,6 +379,12 @@ app.get('/cart', async(req,res) => {
     findprice = `select price from products where (product_id = ${product_id[i].product_id});`;
     price = await db.any(findprice); 
     prices[i] = price[0].price; 
+
+    img = `select image_url from items where (cart_id = ${cart_id}) and (product_id = ${product_id[i].product_id});`;
+    img_url = await db.any(img);
+    console.log('image: ' + img_url); 
+    //imgs[i] = img_url[0].image_url; 
+
     //amounts[i] = amount; 
     //console.log(amounts[i]);
     //amounts[i] = amount[i].amount; 
@@ -381,6 +412,7 @@ app.get('/cart', async(req,res) => {
     names: names,
     logged: value,
     count: count, 
+    
     });
 
   //let findamt = `select amount from items where (user_id = ${usrId}) AND (cart_id = ${cart_id}) AND (product_id = ${});`; 
@@ -421,8 +453,8 @@ app.get('/cart', async(req,res) => {
 
 
 
-app.get('/register', (req, res) => {
-  let count = getCount(req.session.user_id);
+app.get('/register', async (req, res) => {
+  let count = await getCount(req.session.user_id);
   console.log('getCount happens');
   if(req.query.error){
   res.render("pages/register.ejs",{
@@ -478,7 +510,7 @@ app.post('/register', async (req, res) => {
 //load product page
 app.get('/', async (req,res) => {
  
-  let count = getCount(req.session.user_id);
+  let count = await getCount(req.session.user_id);
   console.log('getCount happens'); 
 
   axios({
@@ -529,30 +561,48 @@ app.get('/', async (req,res) => {
 });
 
 async function storeDataInDatabase(data, category) {
+
+  //writing sql query 
+  
+
   try {
     for (const product of data) {
-      const insertQuery = `
-        INSERT INTO products (name, description, price, review, product_id, category)
-        VALUES ($1, $2, $3, $4, $5, $6);`;
 
-      await db.none(insertQuery, [
-        product.title,
-        product.description,
-        product.price,
-        product.rating.rate,
-        product.id,
-      ]);
+      let query = `select name from products where name = $1;`;
+      let q_name = await db.any(query);
+      q_name = q_name[0].name;
+      console.log('name: ')
+      console.log(q_name);
+      if(q_name == ''){
+        //not in the DB
+        const insertQuery = `
+          INSERT INTO products (name, description, price, review, image_url)
+          VALUES ($1, $2, $3, $4, $5);`;
+
+        await db.none(insertQuery, [
+          product.title,
+          product.description,
+          product.price,
+          product.rating.rate,
+          product.image_url
+        ]);
+      } else
+      {
+        console.log('product in database')
+        return; 
+      }
     }
-
-    console.log(`Data for category '${category}' successfully stored in the database`);
-  } catch (error) {
-    console.error(`Error storing data for category '${category}':`, error.message || error);
-  }
+      console.log(`Data for category '${category}' successfully stored in the database`);
+    } catch (error) {
+      console.error(`Error storing data for category '${category}':`, error.message || error);
+    }
+  
+  
 }
 
-app.get('/electronics', (req,res) => {
+app.get('/electronics', async (req,res) => {
 
-  let count = getCount(req.session.user_id);
+  let count = await getCount(req.session.user_id);
   console.log('getCount happens');
       //check if logged in
       let value = true;      
@@ -602,9 +652,9 @@ app.get('/electronics', (req,res) => {
 
 });
 
-app.get('/jewelery', (req,res) => {
+app.get('/jewelery', async (req,res) => {
   
-  let count = getCount(req.session.user_id);
+  let count = await getCount(req.session.user_id);
   console.log('getCount happens');
 
   //check if logged in
@@ -655,9 +705,9 @@ app.get('/jewelery', (req,res) => {
 
 });
 
-app.get('/mens', (req,res) => {
+app.get('/mens', async (req,res) => {
   
-  let count = getCount(req.session.user_id);
+  let count = await getCount(req.session.user_id);
   console.log('getCount happens');
 
   //check if logged in
@@ -708,9 +758,9 @@ app.get('/mens', (req,res) => {
 
 });
 
-app.get('/womens', (req,res) => {
+app.get('/womens', async (req,res) => {
 
-  let count = getCount(req.session.user_id);
+  let count = await getCount(req.session.user_id);
   console.log('getCount happens');
 
   //check if logged in

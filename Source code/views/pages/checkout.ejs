@@ -2,26 +2,21 @@
 
 <!-- start body -->
 
-<div style="display: flex; justify-content: space-around;">
-
-    
-
-        <div style="padding-top: 2em;">
+        <div style="padding-top: 2em; flex: display; flex-direction: column;">
         <!--show each product in cart-->
         <!--add images to db..... ughhhh-->
         <% for(let i = 0; i < amounts.length; i++){%>
             <div style="display: flex; border: solid;">
             <%= names[i]%>
             <%= amounts[i]%>
-            <%= prices[i]%>
+            $<%= prices[i]%>
+            
             </div>
 
         
         <% } %>
         </div>
 
-
-    
     <div class="container" style="padding: 20px;">
         <div class="row" style="padding: 10px;"> <!-- First & Last -->
             <div class="col">
@@ -151,6 +146,7 @@
                 <a class="btn btn-info" role="button">Place Order</a>
             </div>
         </div>
+    </div>
 
 
     </div>

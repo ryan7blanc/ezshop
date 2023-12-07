@@ -7,11 +7,12 @@ CREATE TABLE users(
 
 DROP TABLE IF EXISTS products CASCADE;
 CREATE TABLE products(
-    name VARCHAR(100) NOT NULL,
-    description VARCHAR(500) NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    description VARCHAR(200) NOT NULL,
     price INT NOT NULL,
     review INT NOT NULL,
-    product_id SERIAL PRIMARY KEY NOT NULL
+    product_id SERIAL PRIMARY KEY NOT NULL,
+    image_url VARCHAR(300) 
 );
 
 DROP TABLE IF EXISTS cart CASCADE;
@@ -27,6 +28,8 @@ CREATE TABLE items(
     cart_id INT NOT NULL,
     product_id INT NOT NULL, 
     amount INT NOT NULL,
+    image_url VARCHAR(300) ,
     FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE CASCADE,
     FOREIGN KEY (cart_id) REFERENCES cart (cart_id) ON DELETE CASCADE
+    
 );
