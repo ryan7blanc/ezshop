@@ -943,6 +943,13 @@ app.post('/display', upload.none(), async (req, res) => {
 
 })
 
+app.get('/thankyoupage', (req, res) => {
+  res.render("pages/thankyoupage.ejs",
+  {
+    message: "Thank you!"
+  }
+  );
+});
 
 app.get("/logout", (req, res) => {
   req.session.destroy();
@@ -952,5 +959,6 @@ app.get("/logout", (req, res) => {
   }
   );
 });
+
 
   module.exports = app.listen(3000);
