@@ -943,7 +943,18 @@ app.post('/display', upload.none(), async (req, res) => {
 
 })
 
-app.get('/thankyoupage', (req, res) => {
+app.get('/thankyoupage', async (req, res) => {
+
+  let user_id = req.session.user_id; 
+
+  let find = `select cart_id from cart where user_id = ${user_id}`;
+  let cart_id = await db.any(find); 
+  cart_id = cart_id[0].cart_id; 
+
+  let del = `delete from items where cart_id = ${cart_id} returning *`;
+  let check = await db.any(del); 
+  console.log(check); 
+
   res.render("pages/thankyoupage.ejs",
   {
     message: "Thank you!"
