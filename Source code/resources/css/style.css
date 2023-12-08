@@ -86,6 +86,9 @@ header {
 }
 .cart {
   display: flex;
+  position: relative;
+  align-items: center;
+  margin-right: 10px;
 }
 .cart .cart-icon {
   font-size: 2.5rem
@@ -275,4 +278,18 @@ form
 #log_reg
 {
   padding-bottom: 1em; 
+}
+
+#product-count
+{
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: rgb(0, 0, 0);
+  color: white;
+  border-radius: 50%;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 5px;
 }
