@@ -44,14 +44,15 @@
           <% if(locals.logged){ %>
           <a href="/cart">
             <%}%>
+            <%if(locals.logged){%>
+              <div id="product-count" style="display:inline;"><%=count%> </div>
+              <%}%>
             <% if(!locals.logged){ %>
               <a href="#">
                 <%}%>
+                
             <span class="material-symbols-outlined cart-icon">shopping_cart</span>
             
-            <%if(locals.logged){%>
-            <div id="product-count"><%=count%> </div>
-            <%}%>
           </a>
         </div>
       </nav>
