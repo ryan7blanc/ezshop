@@ -1,7 +1,12 @@
 # ezshop
-# Dependencies: Multer https://www.npmjs.com/package/multer, install using: npm install --save multer
-# Bcrypt : npm install bcryptjs --save
-
+# Dependencies: 
+Multer https://www.npmjs.com/package/multer, install using: npm install --save multer
+Bcryptjs : npm install bcryptjs --save
+# Install & Run Guide
+1. Install Docker
+2. Clone the repository, and make your own .env file 
+3. Install dependencies
+4. Use docker compose up to start the server, and docker compose down to shut it down (docker compose down --volumes deletes all data in DB). 
 
 CSCI 3308 Group 15-03 Project: EZ Shop
 
