@@ -1,6 +1,7 @@
 # EZshop
 # Dependencies: 
 Multer https://www.npmjs.com/package/multer, install using: npm install --save multer
+
 Bcryptjs : npm install bcryptjs --save
 # Install & Run Guide
 1. Install Docker
